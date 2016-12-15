@@ -1,0 +1,145 @@
+<extend name="./Application/Admin/View/Layout.html"/>
+<block name="head">
+  <style>
+    .menu-add-content{
+      margin: 50px;
+    }
+    ul li{
+      list-style-type: none;
+    }
+    .first_checkbox{
+      margin-left:10px;
+    }
+    .first_checkbox li{
+      float: none;
+      border-bottom:1px dotted #CCC;
+      overflow:auto;
+      font-size:16px;
+    }
+    .first_checkbox li .two_checkbox {
+      margin-left: 30px;
+      margin-bottom: 10px;
+    }
+    .check{
+      width:150px;
+      margin-left:44%;
+    }
+  </style>
+</block>
+<block name="content">
+
+  <div class="menu-add-content">
+
+    <form action="<{$url}>" method="post" class="form-horizontal">
+      <!--权限名称-->
+      <div class="form-group">
+        <label class="col-sm-2 control-label must">组名称</label>
+
+        <div class="col-sm-4">
+          <input type="text" class="form-control must-input" name="title" id="title" value="" /></div>
+        <div class="col-sm-6"><span class="help-block">请设置组名称</span></div>
+      </div>
+      <!--用户组启用状态-->
+      <div class="form-group">
+        <label class="col-sm-2 control-label">是否启用</label>
+
+        <div class="col-sm-4">
+          <label class="radio-inline"><input name="status" type="radio" value="1" checked />已启用</label>
+          <label class="radio-inline"><input name="status" type="radio" value="0" />已禁用</label>
+        </div>
+        <div class="col-sm-6">
+          <span class="help-block">设置<code>否</code>则禁用该用户组</span>
+        </div>
+      </div>
+      <!--权限分配-->
+      <div class="form-group">
+        <label class="col-sm-2 control-label">分配的权限</label>
+
+        <div class="col-sm-4">
+          <input type="hidden" id="all" value="1" />
+          <button type="button" class="btn btn-info" id="all_checkbox" value="1">全选 / 反选</button>
+        </div>
+        <div class="col-sm-6"><span class="help-block">给组分配权限</span></div>
+      </div>
+
+      <div class="form-group">
+        <label class="col-sm-2 control-label">权限分配</label>
+          <ul class="first_checkbox">
+            <foreach name="data" item="vo">
+              <li>
+                <input type="hidden" id="box<{$vo.id}>" value="0" />
+                <input type="checkbox" name="rules[]" class="checkbox<{$vo.id}>" id="<{$vo.id}>" onclick="checkbox(<{$vo.id}>)" value="<{$vo.id}>" />
+                <label for="<{$vo.id}>"><{$vo.title}></label>
+                <br />
+                <div class="two_checkbox">
+                  <span>┠</span>
+                  <foreach name="vo['sub']" item="sub">
+                    <input type="checkbox" name="rules[]" class="checkbox<{$vo.id}>" id="<{$sub.id}>" value="<{$sub.id}>" />
+                      <span>
+                          <label for="<{$sub.id}>"><{$sub.title}></label>
+                      </span>
+                  </foreach>
+                </div>
+              </li>
+            </foreach>
+          </ul>
+        <div class="col-sm-4">
+
+        </div>
+      </div>
+      <!--提交表单-->
+      <div class="form-group m-b-0">
+        <div class="col-sm-offset-2 col-sm-10">
+          <input type="submit" class="btn btn-primary" value="提交"/>
+          <!--<input type="reset" class="btn btn-default" value="刷新"/>-->
+          <a class="J_menuItem btn btn-primary" href="javascript:history.go(-1)">返回</a>
+        </div>
+      </div>
+    </form>
+  </div>
+
+</block>
+
+<block name="foot">
+  <script>
+    $(function () {
+      $('.top').change(function(){
+        var top_val=$('.top').val();
+        $.ajax({
+          url     : "<{:U('admin/Systemconfig/menu/ajax_second')}>",
+          type    : 'post',
+          data:{top:top_val},
+          success : function (data) {
+            if (data.status == 1) {
+              var option='<option value="">菜单</option>'+data.info;
+              $('.form-group').find('[name="second"]').html(option);
+            }
+          }
+        })
+      });
+    });
+
+    //全选与反选
+    $("#all_checkbox").click(function () {
+      if ($(this).attr('value')==1) { // 全选
+        $("input[type='checkbox']").prop("checked", true);
+        $(this).attr('value',0);
+      }
+      else { // 取消全选
+        $(this).attr('value',1);
+        $("input[type='checkbox']").prop("checked", false);
+      }
+    });
+    function checkbox(id){
+      var box = $('#box'+id).val();
+      if(box == 1){
+        $('#box'+id).attr('value', 0);
+        //此处使用attr第二次设置的时候会出问题，解决办法使用prop函数，jquery版本必须要1.6.1以上
+        $('.checkbox'+id).prop('checked', false);
+      }else{
+        $('#box'+id).attr('value', 1);
+        $('.checkbox'+id).prop('checked', true);
+      }
+    }
+  </script>
+</block>

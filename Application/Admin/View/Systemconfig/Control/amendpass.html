@@ -1,0 +1,75 @@
+<extend name="./Application/Admin/View/Layout.html" />
+<block name="head">
+	<style>
+		#rightBox{
+			padding: 15px;
+		}
+	</style>
+</block>
+<block name="content">
+	<div class="alert alert-warning" role="alert">
+		<p>管理员密码修改，请谨慎修改，密码不要复杂程度适中</p>
+	</div>
+	<div class="panel panel-primary">
+		<div class="panel-heading">
+			<h3 class="panel-title">管理员密码修改</h3>
+		</div>
+		<div class="panel-body">
+			<form class="form-horizontal" role="form" action="__URL__/amendpass" id="myform">
+				<div class="form-group">
+					<label for="password" class="col-sm-2 control-label">原密码</label>
+					<div class="col-sm-5">
+						<input type="password" class="form-control" id="password" name="oldpassword" placeholder="原密码">
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="newpass" class="col-sm-2 control-label">新密码</label>
+					<div class="col-sm-5">
+						<input type="password" class="form-control" id="newpass" name="password" placeholder="输入新密码">
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="newpass" class="col-sm-2 control-label">重复新密码</label>
+					<div class="col-sm-5">
+						<input type="password" class="form-control" id="newpass" name="repassword" placeholder="重复新密码">
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-offset-2 col-sm-10">
+						<input type="hidden" name="id" value="<{$adminid}>">
+						<button type="submit" class="btn btn-primary">修&nbsp;改</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</block>
+<block name="foot">
+	<script>
+		$(function () {
+			$.fn.getName = function (name) {
+				return $(this).find("[name='" + name + "']");
+			};
+
+			var $form    = $('form');
+			var $submit  = $form.find("[type='submit']").prop('disabled', false);
+			$form.submit(function () {
+				$submit.prop('disabled', true);
+				$.post($form.attr('action'), $form.serialize(), function (data) {
+					if (data.status) {
+						alert(data.info);
+						self.location.href = data.url;
+						$submit.prop('disabled', true);
+					} else {
+						alert(data.info);
+						if (data.url) {
+							$form.getName(data.url).focus();
+						}
+						$submit.prop('disabled', false);
+					}
+				});
+				return false;
+			});
+		});
+	</script>
+</block>

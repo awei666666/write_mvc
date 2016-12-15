@@ -1,0 +1,30 @@
+<foreach name="data" item="v">
+
+  <if condition="($v['rank'] eq 2) ">
+
+    <div onclick="two(this.id)" class="two" id="two-<{$v.second}>">
+      <a class="menu-father-a" href="javascript:;">
+        <i class="<{$v.icon}>"></i>
+        <span><{$v['name']}></span>
+        <i class="glyphicon glyphicon-chevron-up domn domn-two-<{$v.second}>"></i>
+      </a>
+    </div>
+
+    <elseif condition="$v['rank'] eq 3"/>
+
+    <ul  class="three two-<{$v.second}>">
+      <li class="<{$v.three_active}>">
+        <a href="<{$v.href}>">
+           <i class="<{$v.icon}>"></i>
+           <span><{$v['name']}></span>
+        </a>
+      </li>
+    </ul>
+
+    <else />
+    其他选项，未读出，请联系管理员
+  </if>
+
+
+
+</foreach>

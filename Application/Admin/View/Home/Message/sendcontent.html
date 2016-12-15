@@ -1,0 +1,156 @@
+<extend name="./Application/Admin/View/Layout.html" />
+<block name="head">
+    <style>
+        *{
+            padding: 0px;
+            margin: 0px;
+            list-style: none;
+        }
+        .row{
+            padding-left: 20px;
+        }
+
+        .top a{
+            margin-right: 5px;
+            margin:2px;
+            padding: 2px ;
+        }
+        .info{
+            border-bottom: 1px solid yellow;
+            background: #EFF5FB;
+            padding: 15px;
+            line-height: 24px;
+        }
+        .bg-info{
+            background:#C1D9F3;
+        }
+        #rightBox{
+            padding: 15px;
+        }
+        .panel-title{
+            padding-bottom: 35px;
+            color: #000;
+        }
+        .panel-title a{
+            margin-right: 10px;
+        }
+        .panel-body{
+            padding: 0px;
+        }
+        h3{margin: 0px; padding-bottom:15px;font-weight: bold; }
+        .panel-info{
+            padding: 15px;
+        }
+        .info em{
+            font-style: normal;
+            color: #000;
+            font-size: 16px;
+        }
+    </style>
+</block>
+<block name="nav">
+    <div onclick="two(this.id)" class="two" id="index-manage">
+        <a class="menu-father-a" href="javascript:;">
+            <i class="glyphicon glyphicon-briefcase"></i>
+            <span>待审核信息</span>
+            <i class="glyphicon glyphicon-chevron-up domn domn-index-manage"></i>
+        </a>
+    </div>
+
+    <ul  class="three index-manage">
+        <li class="index-manage">
+            <a href="javascript:;">
+                <i class="glyphicon glyphicon-calendar"></i>
+                <span>待审核店铺</span>&nbsp;&nbsp;&nbsp;
+                <span class="badge"><{$num}></span>
+
+            </a>
+        </li>
+    </ul>
+    <ul  class="three index-manage">
+        <li class="index-manage">
+            <a href="javascript:;">
+                <i class="glyphicon glyphicon-user"></i>
+                <span>待审核会员</span>&nbsp;&nbsp;&nbsp;
+                <span class="badge"><{$num}></span>
+
+            </a>
+        </li>
+    </ul>
+    <ul  class="three index-manage">
+        <li class="index-manage">
+            <a href="javascript:;">
+                <i class="glyphicon glyphicon-inbox"></i>
+                <span>待审核产品</span>&nbsp;&nbsp;&nbsp;
+                <span class="badge">4</span>
+            </a>
+        </li>
+    </ul>
+
+    <!--二级目录-->
+    <div onclick="two(this.id)" class="two" id="index-info">
+        <a class="menu-father-a" href="javascript:;">
+            <i class="glyphicon glyphicon-comment"></i>
+            <span>其他信息</span>
+            <i class="glyphicon glyphicon-chevron-up domn domn-index-manage"></i>
+        </a>
+    </div>
+
+    <ul  class="three index-info">
+        <li class="index-info active">
+            <a  href="<{:U('admin/home/message/index')}>">
+                <i class="glyphicon glyphicon-bell"></i>
+                <span>事件提醒</span>&nbsp;&nbsp;&nbsp;
+                <span class="badge"><{$num}></span>
+
+            </a>
+        </li>
+    </ul>
+    <ul  class="three index-info">
+        <li class="index-info">
+            <a href="javascript:;">
+                <i class="glyphicon glyphicon-bullhorn"></i>
+                <span>特殊通知</span>&nbsp;&nbsp;&nbsp;
+                <span class="badge">4</span>
+            </a>
+        </li>
+    </ul>
+</block>
+<block name="content">
+
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                <a href='<{:U("reply?name={$content[uname]}")}>' class="col-md-1 btn btn-default">再次发送</a>
+                <a href='<{:U("transpond?id={$content[id]}")}>' class="col-md-1 btn btn-default">转发</ a>
+                <a href='<{:U("del?id={$content[id]}")}>'  class="col-md-1 btn btn-default">删除</a>
+                <a href='<{:U("sendhistory")}>' class="col-md-1 btn btn-default">返回列表</a>
+                <a href='<{:U("download?id={$content[id]}")}>' class="col-md-1 btn btn-default">下载附件</a>
+            </h3>
+        </div>
+        <div class="panel-body">
+            <div class="info">
+                <h3><{$content['title']}></h3>
+                <span><em>发送给：</em><{$content['uname']}><<{$content['address']}>></span><br>
+                <span><em>时&nbsp;&nbsp;&nbsp;&nbsp;间：</em><{$content['time']}></span><br>
+            </div>
+
+            <div class="panel-info">
+                <p style="font-size: 20px"><{$content['content']}></p>
+            </div>
+        </div>
+        <if condition='$content["accessory"]'>
+            <div class="panel panel-primary" style="margin: 15px;">
+                <div class="panel-primary-tit" style="padding: 15px 0 15px 15px;;background: #EFF5FB;">
+                    <i class="glyphicon glyphicon-floppy-disk"></i>附件
+                </div>
+                <div style="padding: 15px;">
+                    <img src="__IMG__/message/<{$content.accessory}>" alt="" width="50px">
+                    <a href='<{:U("download?id={$content[id]}")}>' class="btn btn-default"><i class="glyphicon glyphicon-download-alt"></i>下载附件</a>
+                </div>
+            </div>
+        </if>
+    </div>
+</block>
+<block name="foot">
+</block>

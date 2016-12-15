@@ -1,0 +1,166 @@
+<extend name="./Application/Admin/View/Layout.html"/>
+<block name="head">
+	<style>
+		.panel {
+			margin: 20px;
+		}
+		.top-list {
+			background-color: #d9edf7;
+			padding: 10px;
+		}
+		.two-list {
+			background-color: #dff0d8;
+			padding: 5px;
+			padding-left: 30px;
+		}
+		.three-list {
+			padding: 0 5px 4px 51px;
+			/*padding-left: 51px;*/
+		}
+		.checkbox {
+			margin: 5px 25px 10px 5px;
+			/*margin-right: 25px;*/
+			/*margin-top: 5px;*/
+		}
+		.clear {
+			clear: both;
+		}
+
+	</style>
+</block>
+<block name="content">
+
+	<div class="panel panel-primary">
+
+		<div class="panel-heading"><{$menu_name.name}></div>
+
+		<form action="<{$url}>" method="post">
+			<input type="hidden" name="id" value="<{$field.id}>">
+		<div class="panel-body">
+
+				<div class="form-group">
+					<label class="col-sm-2 control-label must">权限组名称</label>
+
+					<div class="col-sm-4">
+						<input type="text" class="form-control must-input" name="title" value="<{$field.title}>"/>
+					</div>
+					<div class="clear"></div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label must">是否启用</label>
+
+					<div class="col-sm-4">
+						<label class="radio-inline"><input name="status" type="radio" value="1" <{$field.show}> checked/>启用</label>
+						<label class="radio-inline"><input name="status" type="radio" value="0" <{$field.no_show}>/>禁用</label>
+					</div>
+					<div class="col-sm-6"><span class="help-block">设置<code>禁用</code>则不能再给此权限组新增管理员</span></div>
+					<div class="clear"></div>
+				</div>
+
+
+				<foreach name="top_list" item="vo">
+					<div class="checkbox top-list">
+						<label>
+							<input class="top-input <{$vo.top}>" <{$vo.checked}> name="top_list[]" value="<{$vo.top}>" type="checkbox"> <{$vo.name}>
+						</label>
+					</div>
+					<foreach name="vo['second']" item="vv">
+						<div class="checkbox two-list">
+							<label>
+								<input <{$vv.checked}> name="second_list[]" class="second-input second-<{$vo.top}> <{$vv.top}>-<{$vv.second}> second-input-<{$vv.top}>" data="<{$vv.top}>-<{$vv.second}>" value="<{$vv.top}>/<{$vv.second}>" type="checkbox"> <{$vv.name}>
+							</label>
+						</div>
+						<div class="form-inline three-list">
+							<foreach name="vv['three']" item="vvv">
+								<div class="checkbox">
+									<label>
+										<input name="three_list[]" class="three-input three-input-<{$vvv.top}>-<{$vvv.second}>" value="<{$vvv.top}>/<{$vvv.second}>/<{$vvv.three}>" type="checkbox"  <{$vvv.checked}>> <{$vvv.name}>
+									</label>
+								</div>
+							</foreach>
+						</div>
+
+					</foreach>
+
+				</foreach>
+		</div>
+
+
+		<div class="panel-footer">
+			<button type="submit" class="__submit__">增加</button>
+		</div>
+		</form>
+
+
+	</div>
+
+</block>
+<block name="foot">
+	<script>
+		$(function () {
+			//点击一级菜单默认选中二级菜单
+			$('.top-input').on('change', function () {
+				var top = $(this).val();
+				if ($(this).is(":checked")) {
+					$('.second-input-' + top).each(function () {
+						$(this).prop("checked", true);
+					});
+				} else {
+					$('.second-input-' + top).each(function () {
+						$(this).prop("checked", false);
+					});
+				}
+
+				//选中三级菜单
+				$('.second-' + top).each(function () {
+					var second = $(this).attr('data');
+					if ($(this).is(":checked")) {
+						$('.three-input-' + second).each(function () {
+							$(this).prop("checked", true);
+						});
+					} else {
+						$('.three-input-' + second).each(function () {
+							$(this).prop("checked", false);
+						});
+					}
+				});
+
+			});
+			//点击二级菜单默认选中三级菜单
+			$('.second-input').on('change', function () {
+				var second = $(this).attr('data');
+				var indexs=second.split('-');
+
+				if ($(this).is(":checked")) {
+					$('.'+indexs[0]).prop("checked", true);
+					$('.'+indexs[0]).prop("indeterminate", true);
+					$('.three-input-' + second).each(function () {
+						$(this).prop("checked", true);
+					});
+				} else {
+
+					$('.three-input-' + second).each(function () {
+						$(this).prop("checked", false);
+					});
+				}
+
+			});
+			/**
+			 * 点击三级菜单的时候让二级菜单选中
+			 */
+			$('.three-input').on('change',function(){
+				var three=$(this).val();
+				var three_index=three.split('/');
+				if ($(this).is(":checked")) {
+					$('.'+three_index[0]).prop("checked", true);
+					$('.'+three_index[0]).prop("indeterminate", true);
+					$('.'+three_index[0]+'-'+three_index[1]).prop("checked", true);
+					$('.'+three_index[0]+'-'+three_index[1]).prop("indeterminate", true);
+
+				}
+			});
+		});
+
+
+	</script>
+</block>

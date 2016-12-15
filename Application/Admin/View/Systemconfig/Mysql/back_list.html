@@ -1,0 +1,15 @@
+<foreach name="list" item="v" key="k">
+  <tr>
+    <td><input class="other_input" name="mysql_table_name[]" type="checkbox" value="<{$v.name}>">
+    </td>
+    <td class="left_name_data"><{$k}></td>
+    <td class="left_name_data"><{$prefix}><{$v.name}></td>
+    <td class="left_name_data"><{$v.size}></td>
+    <td class="left_name_data"><{$v.rows}></td>
+    <td class="left_name_data"><{$v.charset}></td>
+    <td class="left_name_data"><{$v.type}></td>
+    <td class="left_name_data"><{$v.patch}></td>
+    <td class="left_name_data"><{$v.annotate}></td>
+
+  </tr>
+</foreach>

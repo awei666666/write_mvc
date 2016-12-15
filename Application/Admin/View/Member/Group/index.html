@@ -1,0 +1,89 @@
+<extend name="./Application/Admin/View/Layout.html"/>
+<block name="head">
+	<style>
+		.hover {
+			background-color: #cceeff;
+			color: #333;
+		}
+		table{
+			border-collapse:separate;
+			border-spacing:0;
+		}
+		table th, table td {
+			border-right: #888 1px dashed;
+			text-align: center;
+
+		}
+
+		.header_mune {
+			/*background-color: #eeeeee;*/
+			background: rgba(0, 0, 0, 0) -moz-linear-gradient(center top, #f9f9f9, #e0e0e0) repeat scroll 0 0;
+		}
+
+		.on {
+			background-color: #00A2D4;
+		}
+		.red {
+			color: #d43f3a;
+		}
+	</style>
+</block>
+<block name="content">
+
+	<div style="margin: 20px" class="panel panel-primary">
+
+		<div class="panel-heading"><{$menu_name.name}></div>
+
+		<table class="table">
+			<thead>
+			<tr class="header_mune">
+				<th width="80">id</th>
+				<th>栏目名称和图标</th>
+				<th width="170">状态</th>
+				<th width="190">操作</th>
+			</tr>
+			</thead>
+			<tbody>
+
+			<foreach name="list" item="v">
+
+
+				<td><{$v.id}></td>
+				<td><{$v.title}></td>
+				<if condition="$v['status'] eq 1">
+					<td class="left_name_data">启用</td>
+					<elseif condition="$v['status'] eq 0"/>
+					<td class="left_name_data ">
+						<div class="mune_two_name">禁用</div>
+					</td>
+					<else/>
+				</if>
+
+				<td>
+					<a href="<{:U('edit',array('id'=>$v['id']))}>" class="__edit__"> 修改</a>　
+					<a href="<{:U('delete',array('id'=>$v['id']))}>" class="__delete__"> 删除</a>
+				</td>
+				</tr>
+			</foreach>
+
+
+			</tbody>
+
+		</table>
+	</div>
+
+</block>
+<block name="foot">
+	<script>
+		$(function () {
+			$('table tr').hover(
+				function () {
+					$(this).addClass("hover");
+				},
+				function () {
+					$(this).removeClass("hover");
+				}
+			);
+		});
+	</script>
+</block>

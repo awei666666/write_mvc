@@ -1,0 +1,151 @@
+<extend name="./Application/Admin/View/Layout.html"/>
+<block name="head">
+	<style>
+		.hover {
+			background-color: #cceeff;
+			color: #333;
+		}
+		table{
+			border-collapse:separate;
+			border-spacing:0;
+		}
+		table th, table td {
+			border-right: #888 1px dashed;
+			text-align: center;
+			font-size: 14px;
+			font-weight: 500;
+		}
+		.left_name_data {
+			padding-left: 30px;
+			text-align: left;
+		}
+		.header_mune {
+			/*background-color: #eeeeee;*/
+			background: rgba(0, 0, 0, 0) -moz-linear-gradient(center top, #f9f9f9, #e0e0e0) repeat scroll 0 0;
+		}
+		.mune-top-tr {
+			background-color: #d9edf7;
+		}
+		.mune-two-tr {
+			background-color: #dff0d8;
+		}
+		.mune_two_name {
+			background: url(__IMG__/backgrounds/board.png) no-repeat -55px 3px;
+			padding-left: 55px;
+		}
+		.mune_three_name {
+			background: url(__IMG__/backgrounds/board.png) no-repeat 0 3px;
+			padding-left: 110px;
+		}
+		.mune_three_last {
+			background: url(__IMG__/backgrounds/mune_three_last.png) no-repeat 0 3px;
+			padding-left: 110px;
+		}
+		.on {
+			background-color: #00A2D4;
+		}
+		.red {
+			color: #d43f3a;
+		}
+	</style>
+</block>
+<block name="content">
+
+	<div style="margin: 20px" class="panel panel-primary">
+
+		<div class="panel-heading"><{$menu_name.name}></div>
+
+		<table class="table">
+			<thead>
+			<tr class="header_mune">
+				<th width="80">id</th>
+				<th width="100">排序</th>
+				<th>栏目名称和图标</th>
+				<th width="170">栏目标识</th>
+				<th width="100">是否显示</th>
+				<th width="80">等级</th>
+				<th width="190">操作</th>
+			</tr>
+			</thead>
+			<tbody>
+
+			<foreach name="list" item="v">
+				<?php
+				if($v['rank']==1){
+					$class='mune-top-tr';
+				}elseif($v['rank']==2){
+					$class='mune-two-tr';
+				}else{
+					$class='';
+				}
+				if($v['is_show']==2){
+					$show='red';
+				}else{
+					$show='';
+				}
+				$str_show='<tr class="'.$class.'  '. $show.'"">';
+				echo $str_show;
+
+				?>
+
+				<td><{$v.id}></td>
+				<td><{$v.reorder}></td>
+				<if condition="$v['rank'] eq 1">
+					<td class="left_name_data"><{$v.name}></td>
+					<elseif condition="$v['rank'] eq 2"/>
+					<td class="left_name_data ">
+						<div class="mune_two_name"><{$v.name}></div>
+					</td>
+					<elseif condition="($v['rank'] eq 3) and ($v['last'] eq 0)"/>
+					<td class="left_name_data ">
+						<div class="mune_three_name"><{$v.name}></div>
+					</td>
+					<elseif condition="($v['rank'] eq 3) and ($v['last'] eq 1)"/>
+					<td class="left_name_data ">
+						<div class="mune_three_last"><{$v.name}></div>
+					</td>
+					<else/>
+				</if>
+				<if condition="$v['rank'] eq 1">
+					<td><{$v.top}></td>
+					<elseif condition="$v['rank'] eq 2"/>
+					<td><{$v.second}></td>
+					<elseif condition="($v['rank'] eq 3)"/>
+					<td><{$v.three}></td>
+					<else/>
+				</if>
+				<if condition="$v['is_show'] eq 1">
+					<td>显示</td>
+					<elseif condition="$v['is_show'] eq 2"/>
+					<td class="red">隐藏</td>
+					<else/>
+				</if>
+				<td><{$v.rank}></td>
+				<td>
+					<a href="<{:U('edit',array('id'=>$v['id']))}>" class="__edit__"> 修改</a>　
+					<a href="<{:U('data_delete',array('id'=>$v['id']))}>" class="__delete__"> 删除</a>
+				</td>
+				</tr>
+			</foreach>
+
+
+			</tbody>
+
+		</table>
+	</div>
+
+</block>
+<block name="foot">
+	<script>
+		$(function () {
+			$('table tr').hover(
+				function () {
+					$(this).addClass("hover");
+				},
+				function () {
+					$(this).removeClass("hover");
+				}
+			);
+		});
+	</script>
+</block>

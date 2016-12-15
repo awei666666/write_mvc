@@ -1,0 +1,120 @@
+<extend name="./Application/Admin/View/min_window.html"/>
+<block name="head">
+	<style>
+		.header_mune {
+			/*background-color: #eeeeee;*/
+			background: rgba(0, 0, 0, 0) -moz-linear-gradient(center top, #f9f9f9, #e0e0e0) repeat scroll 0 0;
+		}
+		tr {
+			border: #ddd 3px solid;
+		}
+		td {
+			border: #ddd 1px solid;
+		}
+		.table {
+			margin-bottom: 0px;
+		}
+		td, th {
+			text-align: center;
+		}
+		.panel-body {
+			padding: 0;
+		}
+		.cloce {
+			margin-left: 642px;
+		}
+		.hover {
+			background-color: #cceeff;
+			color: #333;
+		}
+
+	</style>
+</block>
+<block name="content">
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<table class="table">
+				<thead>
+				<tr class="header_mune">
+					<th>名称</th>
+					<th>备份时间</th>
+					<th>操作</th>
+				</tr>
+				</thead>
+				<tbody>
+				<foreach name="list" item="v">
+					<tr>
+						<td class="name_<{$v.index}>"><a data="<{$v.index}>" href="javascript:;"><{$v.name}></a></td>
+						<td class=""><{:date('Y-m-d',$v['time'])}></td>
+						<td class="">
+							<botton data="<{$v.index}>" class="btn btn-success select_btn"> 选择这个文件</botton>
+						</td>
+					</tr>
+				</foreach>
+
+				</tbody>
+
+			</table>
+		</div>
+		<div class="panel-footer">
+			<botton class="btn btn-default cloce"> 关闭</botton>
+		</div>
+	</div>
+</block>
+<block name="foot">
+	<script>
+		var index = parent.layer.getFrameIndex(window.name);
+		$(function () {
+			//表格鼠标划过效果
+			$('table tr').hover(
+				function () {
+					$(this).addClass("hover");
+				},
+				function () {
+					$(this).removeClass("hover");
+				}
+			);
+			//选择目录
+			$('.select_btn').on('click', function () {
+				var this_obj = this;
+				layer.confirm('确认要选择这个目录做为备份目录吗？' +
+					'<P class="text-danger f12">备份将会删除该目录内原有的数据！</p>', {
+					btn : ['继续执行', '我想想'] //按钮
+				}, function () {
+					//确定执行
+					layer.close(index);
+
+					send_parent(this_obj);
+				}, function () {
+					//否则
+
+				});
+
+			});
+			//关闭页面
+			$('.cloce').on('click', function () {
+				parent.layer.close(index);
+			})
+		});
+
+		//给父页面传值
+		function send_parent(btn_id) {
+			var val_index = $(btn_id).attr('data');
+			var val_name  = $('.name_' + val_index).text();
+
+			parent.$('#install_name').val(val_name);
+			parent.layer.close(index);
+			/*$.ajax({
+			 url : "<{:U('delete_dir_select')}>",
+			 async : false,
+			 data:{name:val_name},
+			 type:'get',
+			 success:function(data){
+
+			 }
+
+			 });*/
+		}
+
+	</script>
+</block>

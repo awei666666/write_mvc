@@ -1,0 +1,370 @@
+<extend name="./Application/Admin/View/Layout.html" />
+<block name="nav">
+    <div onclick="two(this.id)" class="two" id="index-manage">
+        <a class="menu-father-a" href="javascript:;">
+            <i class="glyphicon glyphicon-briefcase"></i>
+            <span>待审核信息</span>
+            <i class="glyphicon glyphicon-chevron-up domn domn-index-manage"></i>
+        </a>
+    </div>
+
+    <ul  class="three index-manage">
+        <li class="index-manage">
+            <a href="<{:U('admin/home/verify/shop')}>">
+                <i class="glyphicon glyphicon-calendar"></i>
+                <span>待审核店铺</span>&nbsp;&nbsp;&nbsp;
+                <span class="badge"><{$menu['shop_num']}></span>
+
+            </a>
+        </li>
+    </ul>
+    <ul  class="three index-manage">
+        <li class="index-manage">
+            <a href="<{:U('admin/home/verify/member')}>">
+                <i class="glyphicon glyphicon-user"></i>
+                <span>待审核会员</span>&nbsp;&nbsp;&nbsp;
+                <span class="badge"><{$menu['member_num']}></span>
+
+            </a>
+        </li>
+    </ul>
+    <ul  class="three index-manage">
+        <li class="index-manage">
+            <a href="<{:U('admin/home/verify/product')}>">
+                <i class="glyphicon glyphicon-inbox"></i>
+                <span>待审核产品</span>&nbsp;&nbsp;&nbsp;
+                <span class="badge"><{$menu['product_num']}></span>
+            </a>
+        </li>
+    </ul>
+
+    <!--二级目录-->
+    <div onclick="two(this.id)" class="two" id="index-info">
+        <a class="menu-father-a" href="javascript:;">
+            <i class="glyphicon glyphicon-comment"></i>
+            <span>其他信息</span>
+            <i class="glyphicon glyphicon-chevron-up domn domn-index-manage"></i>
+        </a>
+    </div>
+
+    <ul  class="three index-info">
+        <li class="index-info active">
+            <a  href="<{:U('admin/home/message/index')}>">
+                <i class="glyphicon glyphicon-bell"></i>
+                <span>事件提醒</span>&nbsp;&nbsp;&nbsp;
+                <span class="badge"><{$menu['message_num']}></span>
+
+            </a>
+        </li>
+    </ul>
+    <ul  class="three index-info">
+        <li class="index-info">
+            <a href="javascript:;">
+                <i class="glyphicon glyphicon-bullhorn"></i>
+                <span>特殊通知</span>&nbsp;&nbsp;&nbsp;
+                <span class="badge">4</span>
+            </a>
+        </li>
+    </ul>
+</block>
+<block name="head">
+
+
+<style>
+    *{
+        padding: 0px;
+        margin: 0px;
+        list-style: none;
+    }
+    .editproduc_c{
+        padding-left: 25px;
+    }
+    .form_get{
+        margin-top: 25px;
+        width: 400px;
+    }
+    .dropdown{
+        float:left;
+        display: none;
+
+    }
+    .province{
+        display: inline-block;
+    }
+    select{
+        height:40px;
+    }
+    #list li{
+        margin-top: 2px;
+        color: blue;
+    }
+    .clearfix{
+        margin: 10px 0px;
+    }
+    #group{
+        margin-bottom: 15px;
+    }
+    .list-unstyled li:nth-child(even){
+        float: left;
+        width: 100%;
+        border: solid 1px #ccc;
+    }
+
+</style>
+    </block>
+<block name="content">
+
+    <div class="">
+        <div class=" clearfix">
+            <div class="col-md-5 column">
+                <form  action="<{:U(dosend)}>" class="form_get" method="post" enctype="multipart/form-data">
+                    <div class="form-group" >
+                        <label for="exampleInputEmail1"class="must">发送给:</label>
+                        <input type="text" class="form-control must-input" id="name" name="name" onblur='checkuser(this)' value='<{$name? "$name":''}>' placeholder="输入准确名字或右边按条件选择">
+                        <span id="username"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="exampleInputEmail1" class="must">主&nbsp;&nbsp;题</label>
+                        <input type="text" class="form-control must-input" id="exampleInputEmail1" name="title" value='<{$title? "$title":''}>' placeholder="请输入事件的主题">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputFile">附件</label>
+                        <input type="file" name="accessory" id="exampleInputFile">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1" class="must">正&nbsp;&nbsp;文
+
+                        </label>
+                        <textarea class="form-control must-input"  name="content" rows="8" cols="8"><{$content? "$content":''}></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">发&nbsp;&nbsp;送</button>
+                </form>
+
+            </div>
+            <div class="col-md-7 column">
+                <div class=" clearfix">
+                    <div class="col-md-12 column">
+                        <div style="margin-top: 15px;">
+                            <p class="bg-primary click " style="padding: 8px 10px;font-size: 16px;">点击选择要发送给的人</p>
+                            </div>
+                    </div>
+                </div>
+                <div class=" clearfix">
+                    <div class="col-md-12 column">
+                        <div class="dropdown province">
+                            <select id="province" class="form-control">
+                                <option value="0">请选择省份</option>
+                                <foreach name="arr_province" item="v">
+                                    <option value="<{$v.id}>"><{$v.name}></option>
+                                </foreach>
+
+                            </select>
+
+                        </div>
+                        <div class="dropdown city" >
+                            <select id="city" class="form-control" >
+
+                            </select>
+                        </div>
+                        <div class="dropdown area">
+                            <select id="area" class="form-control" >
+
+                            </select>
+                        </div>
+                        <div class="dropdown street">
+                            <select id="street" class="form-control" >
+
+                            </select>
+                        </div>
+                        <div class="dropdown country">
+                            <select id="country" class="form-control" >
+
+
+                            </select>
+                        </div>
+
+                    </div>
+                </div>
+                <div class=" clearfix">
+                    <div class="col-md-11 column">
+
+                            <select id="group" class="form-control" >
+                                <option value="0">请选择用户组别</option>
+                                <foreach name="arr_group" item="v">
+                                    <option value="<{$v.id}>"><{$v.title}></option>
+                                </foreach>
+
+                            </select>
+                        <button type="button" class="btn btn-default " id='select'>查询</button>
+
+
+                    </div>
+                </div>
+                <div class=" clearfix">
+                    <div class="col-md-12 column " >
+                        <ul class="list-unstyled" id="list">
+
+                        </ul>
+
+
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+</block>
+<block name="foot">
+    <script type="text/javascript">
+        function checkuser(obj) {
+            var value = obj.value;
+            //console.log(value);
+            if (value == '') {
+                $('#username').html('<font color="red" >不能为空</font>')
+
+            } else {
+                name = $('#name').val();
+                $.ajax({
+                    type    : "POST",
+                    url     : "<{:U('namevali')}>",
+                    data    : "name=" + name,
+                    success : function (msg) {
+                        if (msg == 1) {
+                            $('#username').html('<font color="green" >可以发送</font>')
+
+                        } else {
+                            alert('当前选择用户不存在');
+                        }
+                    }
+                });
+
+            }
+        }
+
+    $(function(){
+
+
+        $('#province').change(function(){
+            var province =$ ("#province :selected").val();
+            $.ajax({
+                type: "POST",
+                url: "<{:U('getCity')}>",
+                data: "pid="+province,
+                success: function(msg){
+                    var obj = eval (msg);
+                    var str = "<option value='0'>请选择城市</option>";
+                    for(var k in msg){
+                        str+="<option value="+msg[k].id+">"+msg[k].name+"</option>";
+                    }
+
+                     $('.city').show();
+                    $('#city').html(str);
+                }
+            });
+
+        })
+        $('#city').change(function(){
+            var city =$ ("#city :selected").val();
+            $.ajax({
+                type: "POST",
+                url: "<{:U('getarea')}>",
+                data: "pid="+city,
+                success: function(msg){
+                    var obj = eval (msg);
+                    var str = "<option value='0'>请选择县城</option>";
+                    for(var k in msg){
+                        str+="<option value="+msg[k].id+">"+msg[k].name+"</option>";
+                    }
+                    $('.area').show();
+                    $('#area').html(str);
+
+                }
+            });
+
+        })
+        $('#area').change(function(){
+            var area =$ ("#area :selected").val();
+            $.ajax({
+                type: "POST",
+                url: "<{:U('getstreet')}>",
+                data: "pid="+area,
+                success: function(msg){
+                    var obj = eval (msg);
+                    var str = "<option value='0'>请选择乡镇</option>";
+                    for(var k in msg){
+                        str+="<option value="+msg[k].id+">"+msg[k].name+"</option>";
+                    }
+                    $('.street').show();
+                    $('#street').html(str);
+
+                }
+            });
+
+        })
+        $('#street').change(function(){
+            var street =$ ("#street :selected").val();
+            $.ajax({
+                type: "POST",
+                url: "<{:U('getstreet')}>",
+                data: "pid="+street,
+                success: function(msg){
+                    var obj = eval (msg);
+                    var str = "<option value='0'>请选择乡村</option>";
+                    for(var k in msg){
+                        str+="<option value="+msg[k].id+">"+msg[k].name+"</option>";
+                    }
+                    $('.country').show();
+                    $('#country').html(str);
+
+                }
+            });
+
+        })
+        $('#select').click(function(){
+             province =$ ("#province :selected").val()
+             city =$ ("#city :selected").val();
+             area =$ ("#area :selected").val();
+             street =$ ("#street :selected").val();
+             country =$ ("#country :selected").val();
+             group =$ ("#group :selected").val();
+
+            if(province == 0){
+                alert('请选择条件');
+                return;
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "<{:U('getname')}>",
+                data: "province="+province+"&city="+city+"&area="+area+"&street="+street+"&country="+country+"&group="+group,
+                success: function(msg){
+
+                    var str = '';
+                    for(var k in msg){
+                        str+="<li>"+msg[k].name+"<li>";
+                    }
+
+                    $('#list').html(str);
+
+                }
+            });
+
+
+        })
+        
+        $('#list').on('click','li',function(){
+            name = $(this).text()
+            $('#name').val(name);
+
+        })
+    })
+    </script>
+</block>

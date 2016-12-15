@@ -1,0 +1,1 @@
+<?php	return array ( 'drop' => 'DROP TABLE IF EXISTS `ly_`;', 'create' => ';', );?>

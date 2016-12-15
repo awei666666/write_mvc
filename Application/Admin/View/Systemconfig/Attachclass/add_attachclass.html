@@ -1,0 +1,127 @@
+<extend name="./Application/Admin/View/Layout.html"/>
+<block name="head">
+	<style>
+		.content-padding { padding: 20px; }
+		.form-horizontal{max-width: 95%;}
+		.help-block { float: left; display: block; font-size: 12px; color: #999; }
+		.form-group-title {
+			background-color: #ddd;
+			padding: 8px 8px;
+			margin-left: 30px;
+			margin-bottom: 20px;
+			background-image: linear-gradient(to bottom, #f5f5f5 0%, #e8e8e8 100%);
+			background-repeat: repeat-x;
+			border: 1px #ddd solid;
+			border-radius: 3px;
+			font-size: 12px;
+		}
+		#sizebox ,#sizebox1 { display: none; }
+		.col-sm-2{padding:0}
+	</style>
+</block>
+<block name="content">
+
+	<div class="form-group">
+		<form class="form-horizontal" action="" method="post">
+			<empty name="id">
+				<else/>
+				<input type="hidden" name="id" value="<{$id}>"></empty>
+			<div class="col-sm-11" style="margin: 15px 0px;">
+				<p class="bg-primary" style="padding: 8px 10px;font-size: 16px;">
+					<eq name="a" value="edit">修改
+						<else/>
+						添加
+					</eq>
+					附件分类
+				</p>
+			</div>
+			<div class="form-group">
+				<label for="inputEmail3" class="col-sm-2 control-label"><i class="must"></i>&nbsp;&nbsp;分类名称</label>
+
+				<div class="col-sm-4">
+					<input type="text" name="name" class="form-control" placeholder="分类名称" value="<{$field.name}>">
+				</div>
+				<div class="col-sm-6"><span class="help-block">设置附件分类名称</span></div>
+			</div>
+			<div id="prep" style="width: 100%">
+				<div class="form-group">
+					<label for="inputEmail3" class="col-sm-2 control-label"><i class="must"></i>&nbsp;&nbsp;分类标识</label>
+
+					<div class="col-sm-4">
+						<eq name="field.is_system" value="1">
+							<p class="form-control-static"><{$field.enname}></p>
+							<else/>
+							<input type="text" name="enname" class="form-control" placeholder="分类标识" value="<{$field.enname}>">
+						</eq>
+					</div>
+					<div class="col-sm-6"><span class="help-block">字母、数字、下划线</span></div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="inputEmail3" class="col-sm-2 control-label"><i class="must"></i>&nbsp;&nbsp;附件类型</label>
+
+				<div class="col-sm-4">
+					<eq name="field.is_system" value="1">
+						<p class="form-control-static"><{$type[$field['type']]}></p>
+						<input type="hidden" id="type" value="<{$field['type']}>">
+						<else/>
+						<select name="type" class="form-control">
+							<option value="">请选择附件类型</option>
+							<foreach name="type" item="vo" key="k">
+								<option value="<{$k}>"
+								<eq name="k" value="$field['type']">selected</eq>
+								><{$vo}></option>
+							</foreach>
+						</select>
+					</eq>
+				</div>
+				<div class="col-sm-6"><span class="help-block">选择附件分类</span></div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">系统配置</label>
+
+				<div class="col-sm-4">
+					<eq name="field.is_system" value="1">
+						<p class="form-control-static">系统配置</p>
+						<else/>
+						<label class="radio-inline"><input type="radio" value="1" name="is_system"
+							<eq name="field.is_system" value="1"> checked</eq>
+							/>是</label>
+						<label class="radio-inline"><input type="radio" value="0" name="is_system"
+							<eq name="field.is_system" value="0"> checked</eq>
+							/>否</label>
+					</eq>
+				</div>
+				<div class="col-sm-6"><span class="help-block"><eq name="field.is_system" value="1">系统配置项，无法删除及修改
+							<else/>
+							如果设置为<code>是</code>则不能删除和修改标识以及附件类型
+						</eq></span></div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">排序</label>
+
+				<div class="col-sm-4">
+					<input type="text" name="showorder" class="form-control" placeholder="排序" size="5" value="<{$field.showorder}>">
+				</div>
+				<div class="col-sm-6"><span class="help-block">数字越小排序越靠前</span></div>
+			</div>
+
+
+
+
+
+	<div class="form-group m-b-0" id="formSubmit">
+		<div class="col-sm-offset-2 col-sm-10">
+
+			<input type="submit" class="btn btn-primary" value="<empty name='id'>增加<else/>修改</empty>">
+			<input type="reset" class="btn btn-default" value="重置">
+		</div>
+	</div>
+	</form>
+	</div>
+
+
+</block>
+<block name="foot">
+
+</block>

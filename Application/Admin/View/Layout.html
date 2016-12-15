@@ -1,0 +1,195 @@
+
+<!DOCTYPE HTML>
+<html style="min-width: 1000px; min-height: 1800px">
+<head>
+	<title>PROJECT_NAME</title>
+	<link rel="stylesheet" href="__CSS__/admin_base.css">
+	<!--包含头部重要信息-->
+	<include file="./Application/Admin/View/head.html"/>
+	<!--头部自定义内容-->
+	<block name="head"></block>
+</head>
+<style>
+	#logo img{
+		height: 50px;
+		margin-left: 39px;
+	}
+</style>
+<body style="min-width: 1000px;">
+
+
+<!--ie9以下版本等的提示消息-->
+<!--[if lt IE 9]>
+<div class="alert alert-danger" style="position: absolute; z-index:999; width:100%; height: 60px;">您正在使用
+	<strong>过时的</strong> 浏览器. 是时候
+	<a class="btn btn-success" target="_blank" href="http://browsehappy.com/">更换一个更好的浏览器</a> 来提升用户体验。
+	建议使用<a class="btn btn-success" target="_blank" href="http://rj.baidu.com/soft/detail/11843.html?ald/">火狐浏览器</a> 。
+</div>
+<![endif]-->
+
+
+<!--头部信息-->
+<div id="header">
+	<div id="top-logo">
+		<!--logo图片-->
+		<div id="logo">
+			<!--<img src="__IMG__/backgrounds/LOGO.png" alt="">-->
+		</div>
+		<!--头部右侧菜单-->
+		<div class="pull-right logo-right">
+
+			<div class="item">
+				<a class="btn btn-primary" href="javascript:;">
+					<i class="glyphicon glyphicon-user"></i>
+					<span>用户：<{$user.user}></span>
+				</a>
+			</div>
+			<div class="item">
+				<a class="btn btn-primary" href="<{:U('admin/systemconfig/allocation/amendpass',array('id'=>$user['id']))}>" data-get-confirm="确认要退出登录吗？" role-loading="请稍候..." role-ajax="1">
+					<i class="glyphicon glyphicon-pencil"></i>
+					密码修改
+				</a>
+			</div>
+			<div class="item">
+				<a class="btn btn-primary" href="<{:U('admin/home/index/index')}>"><i class="glyphicon glyphicon-map-marker">
+					</i><span>后台首页</span></a>
+			</div>
+
+			<div class="item">
+				<a class="btn btn-primary" href="<{:U('home/index/index')}>" target="_blank">
+					<i class="glyphicon glyphicon-home"></i>网站首页</a>
+			</div>
+
+			<div class="item">
+				<a class="btn btn-primary" href="<{:U('admin/home/admin/out_login')}>" data-get-confirm="确认要退出登录吗？" role-loading="请稍候..." role-ajax="1">
+					<i class="glyphicon glyphicon-off"></i>
+					退出登录
+				</a>
+			</div>
+			<br/>
+			<!--表，时钟-->
+			<div class="clock" style="position: absolute;left: 80%;top:40px;">
+				<div id="Date"></div>
+				<ul>
+					<li id="hours"></li>
+					<li id="point">:</li>
+					<li id="min"></li>
+					<li id="point">:</li>
+					<li id="sec"></li>
+				</ul>
+			</div>
+		</div>
+
+	</div>
+	<!--一级菜单-->
+	<div id="menu-1">
+		<div class="text-content logo-right">
+			<div class="item">
+				<a class="btn btn-primary" href="<{:U('admin/home/index/index')}>"><i class="glyphicon glyphicon-map-marker">
+					</i><span>首页</span></a>
+			</div>
+			<foreach name="top_menu" item="v">
+				<div class="item">
+					<a class="btn btn-primary <?php if(strtolower($v['top'])==strtolower($top_active)){ echo 'active';} ?>" href="javascript:;" data-menu="__APP__/admin/home/index/menu_panel?top=<{$v['top']}>">
+						<i class="<{$v.icon}>"></i>
+						<span><{$v.name}></span>
+					</a>
+				</div>
+			</foreach>
+		</div>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+<!--下面主要区域-->
+<div id="wrap">
+	<!--二级和三级菜单-->
+	<div id="leftBox" style="overflow: auto;">
+		<div class="menu-panel">
+			<{$menu_panel}>
+			<block name="nav"></block>
+		</div>
+
+	</div>
+	<!--主要内容区域-->
+	<div id="contentBox">
+		<!--面包屑导航-->
+		<div id="currentBar">
+			<ol class="breadcrumb">
+				<li class="title">
+					<i class="glyphicon glyphicon-map-marker"></i>
+					<span id="currentBar_span">当前位置</span>
+				</li>
+				<!--面包屑导航示例-->
+				<li><a href="<{:U('admin/home/index/index')}>">首页</a></li>
+
+				<if condition="$menu_name['name']">
+					<li><a href="javascript:;"><{$menu_name.name}></a></li>
+					<else />
+				</if>
+
+			</ol>
+			<div class="clearfix"></div>
+		</div>
+		<!--主要内容区域主要部分-->
+		<div id="rightBox">
+			<div class="margin_content">
+				<block name="content"></block>
+			</div>
+		</div>
+
+	</div>
+</div>
+<!--底部自定义内容-->
+<block name="foot"></block>
+</body>
+<script type="text/javascript">
+	$(function(){
+
+		$(window).resize(function() {
+			//后台首页框架自适应高度@韩威兵
+			var look_height=$(window).height();
+			//判断可是区域的高度；
+			if(look_height<450){
+				look_height=450;
+			}
+			var scr_height=look_height-175;
+			var left_height=scr_height+30;
+			scr_height=scr_height;
+			$('#leftBox').css('height',left_height);
+			$('#rightBox').css('height',scr_height);
+		});
+	});
+
+	//  一级菜单点击
+	$('.item a').on('click', function () {
+		$('.item a').removeClass('active');
+		$(this).addClass('active');
+		var url = $(this).attr('data-menu');
+		$.ajax({
+			url     : url,
+			type    : 'get',
+			success : function (data) {
+				if (data.status == 1) {
+					$('.menu-panel').html(data.info);
+				}
+			}
+		})
+	});
+
+	//二级菜单点击显示或隐藏
+	function two(id){
+		var two = $('.'+id).css('display');
+		if (two == 'block') {
+			$('.'+id).css('display', 'none');
+			$('.domn-'+id).removeClass('glyphicon-chevron-up');
+			$('.domn-'+id).addClass('glyphicon-chevron-down');
+		} else {
+			$('.'+id).css('display', 'block');
+			$('.domn-'+id).removeClass('glyphicon-chevron-down');
+			$('.domn-'+id).addClass('glyphicon-chevron-up');
+		}
+	}
+
+</script>
+</html>

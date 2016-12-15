@@ -1,0 +1,201 @@
+<extend name="./Application/Admin/View/Layout.html"/>
+<block name="head">
+	<style>
+		.content-padding{
+			padding: 15px ;
+		}
+		.black_screen {
+			width: 84%;
+			height: 1500px;
+			background: rgba(22, 22, 22, 0.5);
+			position: absolute;
+			z-index: 9999;
+			top: 22%;
+			display: none;
+		}
+		.message-info {
+			margin-left: 25%;
+			margin-top: 200px;
+		}
+		.detail-message {
+			height: 160px;
+			overflow: auto;
+		}
+		.info-red {
+			color: red;
+		}
+	</style>
+	<script src="__JS__/layer/layer.js"></script>
+</block>
+<block name="content">
+	<div class="content-padding">
+
+		<div class="alert alert-danger">数据恢复会影响到现有的数据，且不可恢复，请谨慎操作！</div>
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<div class="pull-left"><h3 class="panel-title">数据库还原</h3></div>
+				<div class="clearfix"></div>
+			</div>
+			<div class="panel-body">
+				<form action="javascript:; " method="post" class="form-horizontal">
+					<div class="form-group">
+						<label class="col-sm-2 control-label must">选择备份目录</label>
+						<div class="col-sm-4">
+							<div class="input-group">
+								<input type="text" id="install_name" name="name" class="form-control" value="">
+								<div class="input-group-btn">
+									<button id="layer" type="button" class="btn btn-default">选择目录</button>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-6"><span class="help-block">请选择要还原的备份目录</span></div>
+					</div>
+					<div class="form-group m-b-0">
+						<div class="col-sm-offset-2 col-sm-10">
+							<input type="submit" class="btn btn-success do_recover" value="立即还原">
+							<input type="reset" class="btn btn-default" value="重置">
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+
+	</div>
+
+	<div class="black_screen">
+
+		<div class="col-sm-5 message-info">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title">详细信息</h3>
+				</div>
+				<div class="panel-body">
+					<div class="progress">
+						<div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
+
+						</div>
+						<div class="schedule_content">正在加载中……请耐心等待</div>
+					</div>
+					<div class="detail-message">
+						<div class=""><i class="glyphicon glyphicon-ok info-red"></i>　尽快还款计划考核科技</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+
+	</div>
+
+
+
+
+
+
+</block>
+<block name="foot">
+	<script>
+		var obj_detail_message = $('.detail-message');
+		//选择目录
+		$('#layer').on('click', function () {
+			layer.open({
+				type       : 2,
+				title      : '选择目录',
+				maxmin     : true,
+				shadeClose : true, //点击遮罩关闭层
+				area       : ['800px', '520px'],
+				content    : '<{:U('dir_recover')}>'
+			});
+		});
+		//执行还原
+		$('.do_recover').on('click',function(){
+
+				var input_dir_name=$('#install_name').val();
+				//页面层
+				$.ajax({
+					url     : "<{:U('do_recover')}>",
+					data    : {name:input_dir_name},
+					async   : true,
+					type    : 'post',
+					success : function (data) {
+						var layer_index = layer.confirm(data.info, {
+							btn : ['确定'] //按钮
+						}, function () {
+							ajax_for(data);
+							layer.close(layer_index);
+						}, function () {
+
+						});
+
+					}
+				});
+		});
+
+
+		/**
+		 * ajax循环备份提交
+		 * @param data
+		 */
+		function ajax_for(data) {
+
+			$.ajax({
+				url     : data.url,
+				//data:data,
+				async   : true,
+				type    : 'post',
+				success : function (da) {
+					if (da.status != 0) {
+						$('.black_screen').css('display', 'block');
+						detail_data_info(da.info, 1);
+						detail_data_info(da.next_table_name, 0);
+
+						var percent_number = (da.size / (da.totle - 1)) * 100;
+						$('.schedule_content').text(percent_number.toFixed(2)+'%');
+						$('.progress-bar').css('width', percent_number + '%');
+						$(".detail-message").scrollTop($(".detail-message")[0].scrollHeight);
+						if (percent_number <= 100) {
+							ajax_for(da);
+
+						}
+
+					}else {
+						$('.progress-bar').removeClass('active');
+						//询问框
+						var layer_index = layer.confirm('还原成功！', {
+							btn : ['确定'] //按钮
+						}, function () {
+							$('.black_screen').css('display', 'none');
+							layer.close(layer_index);
+						}, function () {
+
+						});
+					}
+					return;
+
+				}
+			});
+
+		}
+		/**
+		 * 给详细信息添加信息
+		 * @param info
+		 * @param icon_number
+		 */
+		function detail_data_info(info, icon_number) {
+			if (icon_number == 0) {
+				var detail_message = create_back_html(info, 'glyphicon glyphicon-refresh info-red');
+			} else {
+				var detail_message = create_back_html(info, 'glyphicon glyphicon-ok info-red');
+			}
+			var old_detail_message2 = obj_detail_message.html();
+			obj_detail_message.html(old_detail_message2 + detail_message);
+		}
+		/**
+		 * 生成页面需要的html备份分布标签
+		 */
+		function create_back_html(str_back_info, icon_info) {
+			return '<div class=""><i class="' + icon_info + '"></i>　' + str_back_info + '</div>';
+		}
+
+	</script>
+</block>

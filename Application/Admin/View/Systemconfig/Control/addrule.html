@@ -1,0 +1,112 @@
+<extend name="./Application/Admin/View/Layout.html"/>
+<block name="head">
+	<style>
+		.menu-add-content{
+			margin: 50px;
+		}
+
+		.form-option{
+			width: 300px;
+			height:35px;
+			font-size: 18px;
+			text-align: center;
+		}
+		.form-option span{
+			text-align: center;
+			margin:0 auto;
+		}
+	</style>
+</block>
+<block name="content">
+
+	<div class="menu-add-content">
+
+		<form action="<{$url}>" method="post" class="form-horizontal">
+
+			<!--添加权限名称-->
+			<div class="form-group">
+				<label class="col-sm-2 control-label must">权限名称</label>
+				<div class="col-sm-4">
+					<input class="form-control must-input" type="text" name="title" id="title" placeholder="例: 后台首页" value="" />
+				</div>
+				<div class="col-sm-6"><span class="help-block">请设置权限名称</span></div>
+			</div>
+
+			<!--添加权限规则（控制器/方法）-->
+			<div class="form-group">
+				<label class="col-sm-2 control-label must">控制器/方法</label>
+				<div class="col-sm-4">
+					<input class="form-control must-input" type="text" name="name" id="name" placeholder="例： Admin/Home/Index/index" value="" />
+				</div>
+				<div class="col-sm-6">
+					<span class="help-block">请设置权限规则 &nbsp;&nbsp;&nbsp;注：<code>请严格使用标准大小写！</code></span>
+				</div>
+			</div>
+
+			<!--选择权限组-->
+			<div class="form-group">
+				<label class="col-sm-2 control-label">所属上级权限组</label>
+				<div class="col-sm-4">
+					<select class="form-option" name="pid">
+						<option value="">
+							<span>-------------- 顶级权限组 --------------</span>
+						</option>
+						<foreach name="data" item="vo" >
+							<option value="<{$vo.id}>"><{$vo.title}></option>
+						</foreach>
+					</select>
+
+				</div>
+			</div>
+
+			<!--设置状态-->
+			<div class="form-group">
+				<label class="col-sm-2 control-label">是否显示</label>
+				<div class="col-sm-4">
+					<label class="radio-inline">
+						<input name="status" type="radio" value="1" checked/>显示
+					</label>
+					<label class="radio-inline">
+						<input name="status" type="radio" value="0"/>隐藏
+					</label>
+				</div>
+				<div class="col-sm-6">
+					<span class="help-block">设置<code>否</code>则禁用该权限组</span>
+				</div>
+			</div>
+
+			<!--提交表单-->
+			<div class="form-group m-b-0">
+				<div class="col-sm-offset-2 col-sm-10">
+					<input type="submit" class="btn btn-primary" value="提交"/>
+					<!--<input type="reset" class="btn btn-default" value="刷新"/>-->
+					<a class="J_menuItem btn btn-primary" href="javascript:history.go(-1)">返回</a>
+				</div>
+			</div>
+		</form>
+	</div>
+
+</block>
+
+<block name="foot">
+	<script>
+		$(function () {
+			$('.top').change(function(){
+				var top_val=$('.top').val();
+				$.ajax({
+					url     : "<{:U('admin/Systemconfig/menu/ajax_second')}>",
+					type    : 'post',
+					data:{top:top_val},
+					success : function (data) {
+						if (data.status == 1) {
+							var option='<option value="">菜单</option>'+data.info;
+							$('.form-group').find('[name="second"]').html(option);
+						}
+					}
+				})
+			});
+
+
+		});
+	</script>
+</block>

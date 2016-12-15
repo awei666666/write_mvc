@@ -1,0 +1,131 @@
+<extend name="./Application/Admin/View/Layout.html" />
+<block name="content">
+  <style>
+    *{
+      padding: 0px;
+      margin: 0px;
+      list-style: none;
+    }
+    h3{
+      color:#337ab7;
+    }
+    td{
+      text-align: center;
+    }
+    .product_list_top{
+      border-bottom: #CBE9F3 1px solid;
+      padding: 15px;
+
+    }
+    .containerw{
+      margin-top: 25px;
+    }
+    .product-list_data{
+      margin-top: 25px;
+    }
+    .table th{
+      background: #BBDDE5;
+      text-align: center;
+    }
+    .table-bordered>tbody>tr>td, .table-bordered>tbody>tr>th, .table-bordered>tfoot>tr>td, .table-bordered>tfoot>tr>th, .table-bordered>thead>tr>td, .table-bordered>thead>tr>th {
+      border: 1px solid #ccc;
+    }
+    #rightBox{
+      padding:0 10px;
+    }
+    .product_list_left{
+      weight:50%;
+      float: left;
+    }
+    .product_list_mid{
+      width:200px;
+      height:30px;
+      /*background-color: red;*/
+      float:left;
+      font-size: 15px;
+      text-align: center;
+      margin: 0px 200px;
+    }
+    .product_list_right{
+      weight:50%;
+      float: right;
+      text-align: center;
+    }
+    .product_list_bottom{
+      margin-top: 15px;
+    }
+    .form-inline{
+      float: right;
+      margin-bottom: 10px;
+    }
+    #delete{
+      color:red;
+    }
+
+  </style>
+  <div class="containerw">
+    <lable><h3>用户列表</h3></lable>
+
+    <div class="product-list_data">
+      <form action="" method="post" id="form" name="form">
+        <div data-example-id="striped-table" class="bs-example">
+
+          <table class="table table-bordered table-hover" id="tables">
+            <thead>
+            <tr>
+              <th><input type="checkbox" name="checkedAll" id="checkedAll">编号</th>
+              <th>账号</th>
+              <th>用户名</th>
+              <th>会员组</th>
+              <th>电话</th>
+              <th>修改</th>
+              <th>删除</th>
+            </tr>
+            </thead>
+            <tbody>
+            <volist name="data" id="v">
+              <tr>
+                <td scope="row"><input type="checkbox" name="checkboxes[]" value="1585"><{$v.id}></td>
+                <td><{$v.user}></td>
+                <td><{$v.name}></td>
+                <td><{$v.group_id}></td>
+                <td><{$v.mobile}></td>
+                <td align="center"><a href='__CONTROLLER__/editcontrol?id=<{$v.id}>'><span class="glyphicon glyphicon-pencil"></span></a></td>
+                <td align="center"><span id="delete" class="glyphicon glyphicon-remove" onclick="del(this,<{$v.id}>)"></span></td>
+
+              </tr>
+            </volist>
+            </tbody>
+          </table>
+        </div>
+
+      </form>
+
+
+
+      <div class="product_list_bottom">
+        <div class="product_list_left">
+          <span class="rows">共 <span class="count"><{$tot}></span> 条记录</span>
+        </div>
+        <div class="product_list_mid"><{$show}></div>
+        <div class="product_list_right"></div>
+      </div>
+    </div>
+  </div>
+
+</block>
+<block name="foot">
+  <script>
+    function del(obj,id){
+      $.get('__CONTROLLER__/Ajax_del',{'id':id},function(data){
+        //alert(data);
+        if(data==1){
+          $(obj).parent().parent().remove();
+        }
+      });
+    }
+    if(<{$tot}>==0){
+      $("#tables").append('没有符合条件的内容!');
+    }
+  </script>
+</block>

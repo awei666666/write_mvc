@@ -1,0 +1,221 @@
+<extend name="./Application/Admin/View/Layout.html" />
+<block name="head">
+  <!--日历插件-->
+  <script type="text/javascript" src="__JS__/js/laydate.js"></script>
+  <style>
+    *{
+      padding: 0px;
+      margin: 0px;
+      list-style: none;
+    }
+
+    .table th{
+      text-align: center;
+    }
+
+
+    .form-group{
+      padding-bottom:10px;
+    }
+
+    .menu-add-content {
+      margin: 50px;
+    }
+    .dropdown{
+      width: 150px;
+      height:40px;
+      float: left;
+      margin-left:10px ;
+    }
+    .dropdo{
+      width: 150px;
+      height:40px;
+      float: left;
+      margin-left:10px ;
+      margin-top:5px ;
+    }
+    .dropdo1{
+      width:300px;
+      height:40px;
+    }
+    .yuming{
+      height: 30px;
+      width: 60px;
+    }
+  </style>
+</block>
+<block name="content">
+  <div >
+    <div class=" clearfix">
+      <div class="col-md-12 column">
+        <div class="product_list_top">
+
+          <a href="<{:U('citysubstation')}>"  name="requirement" value="all" class='btn <if condition="$filter.requirement eq all">btn-primary<else/>btn-default</if>'>管理分站</a>
+            <button stype="submit" name="requirement" value="1" class='btn <if condition="$filter.requirement eq 1">btn-primary<else/>btn-default</if>'>增加城市分站</button>
+
+          <div class="clear"></div>
+        </div>
+      </div>
+    </div>
+    <div class="menu-add-content">
+
+      <form action="<{:U('addcity')}>" method="post" class="form-horizontal" enctype="multipart/form-data">
+        <!--//<input type="hidden" value="<{$field.id}>" name="id"/>-->
+        <!---->
+        <div class="form-group">
+          <label class="col-sm-2 control-label must">分站地址</label>
+
+          <div class="col-sm-4">
+            <div class="form-group">
+            <select name="province" class="form-control dropdown" id="region_0_0" onchange="setregion(0,0)">
+              <option name="selected" selected='selected' value="-1">请选择(省份)</option>
+              <volist name="district_list" id="v">
+                <option value="<{$v.id}>" <if
+                    condition="$v['id'] eq $filter['province_id'] ">selected
+                </if> ><{$v.name}></option>
+              </volist>
+            </select>
+            <select name="city" class="form-control dropdown" id="region_1_0" onchange="setregion(1,0)">
+              <option name="selected" selected='selected' value="0" >请选择(市)</option>
+            </select>
+            <select name="county" id="region_2_0" class="form-control dropdo" onchange="setregion(2,0)">
+              <option name="selected" selected='selected' value="0">请选择(县)</option>
+            </select>
+            <select name="native" id="region_3_0" class="form-control dropdo" onchange="setregion(3,0)">
+              <option name="selected" selected='selected' value="0">请选择(镇)</option>
+            </select>
+            </div>
+            </div>
+        </div>
+        <!---->
+        <div class="form-group">
+          <label class="col-sm-2 control-label must">网站默认模版</label>
+
+          <div class="col-sm-4">
+            <select  name='template' class="form-control dropdo1" >
+              <option name="selected" selected='selected' value="default">default</option>
+              <option name="selected"  value="wap" >wap</option>
+              <option name="selected"  value="wap_app" >wap_app</option>
+            </select>
+          </div>
+        </div>
+        <!---->
+        <div class="form-group">
+          <label class="col-sm-2 control-label must">二级域名</label>
+
+          <div class="col-sm-4">
+            http://<input  type="text" name="domainname" class="yuming" value="<{$field.icon}>">.www.liangyi.com
+          </div>
+          <div class="col-sm-6"><span class="help-block">填写要绑定的域名</span></div>
+
+
+        </div>
+
+        <div class="form-group">
+          <label class="col-sm-2 control-label">顶级域名</label>
+
+          <div class="col-sm-4">
+            <input type="text" class="form-control" name="top_domain" value='http://'/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">LOGO</label>
+
+          <div class="col-sm-4">
+            <input type="file"  name="logo" value=''/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">分站标题</label>
+
+          <div class="col-sm-4">
+            <input type="text" class="form-control" name="web_title" value=''/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">分站关键词</label>
+
+          <div class="col-sm-4">
+            <input type="text" class="form-control" name="web_keyword" value=''/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">分站描述</label>
+
+          <div class="col-sm-4">
+            <input type="text" class="form-control" name="des" value=''/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">简介联系方式</label>
+
+          <div class="col-sm-4">
+            <textarea cols="47" name="web_des" rows="8">
+
+            </textarea>
+          </div>
+        </div>
+
+
+
+        <div class="form-group m-b-0">
+          <div class="col-sm-offset-2 col-sm-10">
+            <input type="submit" class="btn btn-primary" value="提交"/>
+            <input type="reset" class="btn btn-default" value="刷新"/>
+          </div>
+        </div>
+      </form>
+    </div>
+
+
+  </div>
+</block>
+<block name="foot">
+  <script src="__JS__/layer/layer.js"></script>
+  <script type="text/javascript">
+    function setregion(num,address_id) {
+      var next=num+1;
+      $.ajax({
+        type:'POST',
+        //设置json格式,接收返回数组。
+        dataType:'json',
+        url:'__CONTROLLER__/Ajax_district',
+        //ajax传递当前选项的value值,也就是当前的region_id。
+        data:'id='+$('#region_'+num+'_'+address_id).val(),
+        success:function(msg) {
+          //如果返回值不为空则执行。
+          if (msg!=null) {
+            var option_str='';
+            //循环书写下一个select中要添加的内容。并添加name标记。
+            for (var i=0; i<msg.length; i++) {
+              option_str+='<option name="region_'+next+'"value="'+msg[i].id+'" >'+msg[i].name+'</option>';
+            }
+            //删除下一个select中标记name为next的内容。
+            $("option[name='region_"+next+"']").remove();
+            //向下一个select中添加书写好的内容。
+            $('#region_'+next+'_'+address_id).append(option_str);
+          }else{
+            //如果返回值为空,则移除所有带标记的option,恢复默认选项。
+            for (var i=next; i<=4; i++) {
+              $("option[name='region_"+i+"']").remove();
+            }
+          }
+        }
+
+      })
+    }
+    $("input[type='checkbox']").click( function () {
+
+      if($("input[type='checkbox']").is(':checked')){
+        $('.button').addClass('btn-primary');
+        $('.button').attr('disabled',false);;
+      }else{
+        $('.button').removeClass('btn-primary');
+        $('.button').attr('disabled',true);
+      }
+
+    });
+
+
+  </script>
+</block>

@@ -1,0 +1,139 @@
+<extend name="./Application/Admin/View/Layout.html" xmlns="http://www.w3.org/1999/html"/>
+<block name="head">
+	<style>
+		.margin_content{padding:10px;}
+		.product_list_right {
+			width: 800px;
+			float: right;
+			text-align: right;
+		}
+	</style>
+</block>
+<block name="content">
+	<div class="margin_content">
+		<div class="containerw">
+			<lable><h3>附件分类列表</h3></lable>
+			<div class="product-list_data">
+				<form action="" method="post" id="form" name="form">
+					<div data-example-id="striped-table" class="bs-example">
+						<table class="table table-bordered table-hover">
+							<thead>
+							<tr class= "info">
+								<th style="text-align: center;"><input type="checkbox" name="checkedAll" id="checkedAll"></th>
+								<th>ID</th>
+								<th>分类名称</th>
+								<th>分类标识</th>
+								<th>附件类型</th>
+								<th>系统配置</th>
+								<th align="left">操作</th>
+							</tr>
+							</thead>
+							<tbody>
+							<volist name="list" id="vo">
+							<tr>
+								<td scope="row" align="center"><input id="check" type="checkbox" name="checkboxes[]" value="<{$vo.id}>"></td>
+								<td><{$vo.id}></td>
+								<td><{$vo.name}></td>
+								<td><{$vo.enname}></td>
+								<td><{$type[$vo['type']]}></td>
+								<td><eq name="vo['is_system']" value="1"><font color="red">是</font><else/>否</eq></td>
+								<td align="left">
+									<a href="<{:U('edit_attachclass',array('id'=>$vo['id']))}>" class="btn btn-success btn-xs glyphicon glyphicon-pencil">&nbsp;修改</a>　
+									<neq name="vo['is_system']" value="1">
+										<span id="del"><a href="javascript:void()" class="btn btn-danger btn-xs glyphicon glyphicon-trash">&nbsp;删除</a></span>
+									</neq>
+								</td>
+							</tr>
+							</volist>
+							<tr>
+								<td colspan="7">
+									<button type="button" disabled="true" class="button btn btn-sm" onclick="del_button()">删除</button>
+								</td>
+							</tr>
+							</tbody>
+						</table>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</block>
+<block name="foot">
+	<script src="__JS__/layer/layer.js"></script>
+	<script type="text/javascript">
+
+			//全选全不选
+			$("#checkedAll").click(function () {
+
+				if ($(this).prop("checked")) { // 全选
+					$(".product-list_data input[type='checkbox']").prop("checked", true);
+				}
+				else { // 取消全选
+					$(".product-list_data input[type='checkbox']").prop("checked", false);
+				}
+				$(".btn-sm").addClass("btn-primary").prop("disabled",false)
+			});
+
+
+
+		//底部操作-删除
+		function del_button() {
+
+			layer.confirm('确认删除？', {
+				btn : ['确定', '取消'] //按钮
+			}, function () {
+				var arr = [];
+				var str = '';
+				$('input[type=checkbox]:checked').each(function () {
+
+					if($(this).val()!='on') {
+
+						arr[arr.length] = $(this).val();
+						str += $(this).val() + ',';
+					}
+				});
+
+
+				$.post('<{:U("index")}>', {'option':'delall','str' : str}, function (data) {
+
+					if(data.status==1){
+						layer.msg(data.info, {icon : 1});
+					}else {
+						layer.msg(data.info, {icon : 2});
+					}
+					location=location;
+				});
+
+			}, function () {
+
+			});
+
+		}
+
+		$(document).on('click', '#del', function () {
+			var e = $(this);
+			layer.confirm('确认删除？', {
+				btn : ['确定', '取消'] //按钮
+			}, function () {
+				var tr  = e.parent().parent();
+				var id  = tr.children(':eq(0)');
+				var idz = id.children("input[type='checkbox']").val();
+				$.post('<{:U("index")}>', {'option':'delone','str':idz}, function (data) {
+					console.log(data);
+
+					if(data.status==1){
+						layer.msg(data.info, {icon : 1});
+						e.parent().parent().remove();
+					}else {
+						layer.msg(data.info, {icon : 2});
+					}
+
+				});
+
+			},function(){});
+		});
+
+
+
+	</script>
+</block>

@@ -1,0 +1,213 @@
+<extend name="./Application/Admin/View/Layout.html" />
+<block name="content">
+	<!--日历插件-->
+	<script type="text/javascript" src="__JS__/js/laydate.js"></script>
+	<style>
+		*{
+			padding: 0px;
+			margin: 0px;
+			list-style: none;
+		}
+		.product_list_top{
+			border-bottom: #CBE9F3 1px solid;
+			padding: 15px;
+
+		}
+		.containerw{
+			margin-top: 25px;
+		}
+		.product-list_data{
+			margin-top: 25px;
+		}
+		.table th{
+			background: #BBDDE5;
+			text-align: center;
+		}
+		.table-bordered>tbody>tr>td, .table-bordered>tbody>tr>th, .table-bordered>tfoot>tr>td, .table-bordered>tfoot>tr>th, .table-bordered>thead>tr>td, .table-bordered>thead>tr>th {
+			border: 1px solid #ccc;
+		}
+		#rightBox{
+			padding:0 10px;
+		}
+		.product_list_left{
+			weight:50%;
+			float: left;
+		}
+		.product_list_right{
+			weight:50%;
+			float: right;
+		}
+		.product_list_bottom{
+			margin-top: 15px;
+			text-align: center;
+		}
+	</style>
+	<div class="containerw">
+		<a class="btn btn-info " href="<{:U('addrule')}>">增加权限组</a>
+		<br><br>
+		<form action="" method="get" class="form-inline">
+			<div class="form-group">
+				<select class="form-control">
+					<option>名称</option>
+					<option>控制器/方法</option>
+					<option>显示</option>
+					<option>隐藏</option>
+				</select>
+			</div>
+			<div class="form-group">
+				<label class="sr-only" for="exampleInputAmount">Amount (in dollars)</label>
+				<div class="input-group col-sm-12">
+					<div class="input-group-addon "><i class="glyphicon glyphicon-search"></i></div>
+					<input type="text" class="form-control" id="exampleInputName" name="name" placeholder="请输入关键字">
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="demo1">
+					<input class="laydate-icon" id="demo" value=''>
+				</div>
+			</div>
+			-
+			<div class="form-group">
+				<div class="demo1">
+					<input placeholder="请输入日期" class="laydate-icon" onClick="laydate({istime: true, format: 'YYYY-MM-DD'})">
+				</div>
+			</div>
+			<button type="submit" class="btn btn-primary">搜索</button>
+		</form>
+
+		<div class="product-list_data">
+			<form action="" method="post" id="form" name="form">
+				<div data-example-id="striped-table" class="bs-example">
+
+					<table class="table table-bordered table-hover">
+						<thead>
+							<tr>
+								<th><input type="checkbox" name="checkedAll" id="checkedAll"> 编号</th>
+								<th>名称</th>
+								<th>控制器/方法</th>
+								<th>菜单状态</th>
+								<th>操作</th>
+							</tr>
+						</thead>
+						<tbody>
+							<foreach name="data" item="v">
+								<tr class="text-center">
+									<td scope="row"><input type="checkbox" name="checkboxes[]" value="1585"> <{$v.id}>
+									</td>
+									<td><{$v.title}></td>
+									<td><{$v.name}></td>
+									<td>
+										<if condition="$v['status'] eq 1">
+											已显示
+											<else />
+											<span style="color:#C00">已隐藏</span>
+										</if>
+									</td>
+									<td>
+										<a href="<{:U('editrule',array('id'=>$v['id']))}>" class="__edit__"> 修改</a>　
+										<a href="<{:U('delrule',array('id'=>$v['id']))}>" class="__delete__"> 删除</a>
+									</td>
+								</tr>
+								<foreach name="v['sub']" item="sub">
+									<tr class="text-center">
+										<td scope="row">
+											<input type="checkbox" name="checkboxes[]" value="1585"> <{$sub.id}>
+										</td>
+										<td>
+											<div style="padding-left:50px;">┠<{$sub.title}></div>
+										</td>
+										<td>
+											<div><{$sub.name}></div>
+										</td>
+										<td>
+											<div>
+												<if condition=" $sub.status eq 1 ">
+													已显示
+													<else/>
+													<span style="color:#C00">已隐藏</span>
+												</if>
+											</div>
+										</td>
+										<td>
+											<a href="<{:U('editrule',array('id'=>$sub['id']))}>" class="__edit__"> 修改</a>　
+											<a href="<{:U('delrule',array('id'=>$sub['id']))}>" class="__delete__"> 删除</a>
+										</td>
+									</tr>
+								</foreach>
+							</foreach>
+						</tbody>
+					</table>
+				</div>
+
+			</form>
+			<div class="product_list_bottom">
+				<div class="mid">
+					<{$page}>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</block>
+<block name="foot">
+	<script type="text/javascript">
+		!function(){
+			laydate.skin('molv');//切换皮肤，请查看skins下面皮肤库
+			laydate({elem: '#demo'});//绑定元素
+		}();
+
+
+
+		//底部按钮可执行操作
+		$("input[type='checkbox']").click( function () {
+
+			if($("input[type='checkbox']").is(':checked')){
+				$('.button').addClass('btn-primary');
+				$('.button').attr('disabled',false);;
+			}else{
+				$('.button').removeClass('btn-primary');
+				$('.button').attr('disabled',true);
+			}
+
+		});
+
+
+		//全选全不选
+		$("#checkedAll").click(function () {
+
+			if ($(this).prop("checked")) { // 全选
+				$("input[type='checkbox']").prop("checked", true);
+			}
+			else { // 取消全选
+				$("input[type='checkbox']").prop("checked", false);
+				$('.button').removeClass('btn-primary');
+				$('.button').attr('disabled',true);
+
+			}
+		});
+		var $subBox = $("input[type='checkbox']");
+		$subBox.click(function(){
+			$("#checkedAll").attr("checked",$subBox.length == $("input[type='checkbox']:checked").length ? true : false);
+		});
+
+		//日期范围限制
+		var start = {
+			elem: '#start',
+			format: 'YYYY-MM-DD',
+			min: laydate.now(), //设定最小日期为当前日期
+			max: '2099-06-16', //最大日期
+			istime: true,
+			istoday: false,
+			choose: function(datas){
+				end.min = datas; //开始日选好后，重置结束日的最小日期
+				end.start = datas //将结束日的初始值设定为开始日
+			}
+		};
+
+
+
+
+
+
+	</script>
+</block>

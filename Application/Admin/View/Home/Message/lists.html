@@ -1,0 +1,253 @@
+<extend name="./Application/Admin/View/Layout.html" />
+<block name="head">
+    <!--日历插件-->
+    <script type="text/javascript" src="__JS__/js/laydate.js"></script>
+    <style>
+        *{
+            padding: 0px;
+            margin: 0px;
+            list-style: none;
+        }
+        #rightBox{
+            padding: 15px;
+        }
+        .top a{
+            margin-right: 5px;
+            margin:2px;
+           padding: 2px ;
+        }
+        .img{
+              margin-left: 5px;
+        }
+        h3{
+            display: inline-block;
+            margin: 0px;
+        }
+        .send{
+            margin-left: 20px;
+            margin-right: 20px;
+        }
+        .form-group input{
+            width: 20%;
+        }
+        .aaa{
+            margin-left: 10px;
+            margin-bottom: 10px;
+        }
+        .bg-info{
+            padding: 10px 15px;
+        }
+        /*底部分页css*/
+        .product_list_left{
+            width: 100px;
+            float: left;
+            line-height: 40px;
+        }
+        .product_list_right{
+            width: 800px;
+            float: right;
+            text-align: right;
+        }
+        .product_list_bottom{
+            margin-top: 15px;
+            margin-bottom: 100px;
+        }
+        .pagination{
+            margin:0px;
+            padding: 0px;
+        }
+        .table th{text-align: center}
+    </style>
+</block>
+<block name="nav">
+    <div onclick="two(this.id)" class="two" id="index-manage">
+        <a class="menu-father-a" href="javascript:;">
+            <i class="glyphicon glyphicon-briefcase"></i>
+            <span>待审核信息</span>
+            <i class="glyphicon glyphicon-chevron-up domn domn-index-manage"></i>
+        </a>
+    </div>
+
+    <ul  class="three index-manage">
+        <li class="index-manage">
+            <a href="<{:U('admin/home/verify/shop')}>">
+                <i class="glyphicon glyphicon-calendar"></i>
+                <span>待审核店铺</span>&nbsp;&nbsp;&nbsp;
+                <span class="badge"><{$menu['shop_num']}></span>
+
+            </a>
+        </li>
+    </ul>
+    <ul  class="three index-manage">
+        <li class="index-manage">
+            <a href="<{:U('admin/home/verify/member')}>">
+                <i class="glyphicon glyphicon-user"></i>
+                <span>待审核会员</span>&nbsp;&nbsp;&nbsp;
+                <span class="badge"><{$menu['member_num']}></span>
+
+            </a>
+        </li>
+    </ul>
+    <ul  class="three index-manage">
+        <li class="index-manage">
+            <a href="<{:U('admin/home/verify/product')}>">
+                <i class="glyphicon glyphicon-inbox"></i>
+                <span>待审核产品</span>&nbsp;&nbsp;&nbsp;
+                <span class="badge"><{$menu['product_num']}></span>
+            </a>
+        </li>
+    </ul>
+
+    <!--二级目录-->
+    <div onclick="two(this.id)" class="two" id="index-info">
+        <a class="menu-father-a" href="javascript:;">
+            <i class="glyphicon glyphicon-comment"></i>
+            <span>其他信息</span>
+            <i class="glyphicon glyphicon-chevron-up domn domn-index-manage"></i>
+        </a>
+    </div>
+
+    <ul  class="three index-info">
+        <li class="index-info active">
+            <a  href="<{:U('admin/home/message/index')}>">
+                <i class="glyphicon glyphicon-bell"></i>
+                <span>事件提醒</span>&nbsp;&nbsp;&nbsp;
+                <span class="badge"><{$menu['message_num']}></span>
+
+            </a>
+        </li>
+    </ul>
+    <ul  class="three index-info">
+        <li class="index-info">
+            <a href="javascript:;">
+                <i class="glyphicon glyphicon-bullhorn"></i>
+                <span>特殊通知</span>&nbsp;&nbsp;&nbsp;
+                <span class="badge">4</span>
+            </a>
+        </li>
+    </ul>
+</block>
+<block name="content">
+
+    <div class="aaa">
+        <h3 class="top-menu">事件列表</h3>
+        <a class="send btn btn-default" href="<{:U('admin/home/message/send')}>" >发送事件</a>
+    </div>
+    <div class="aaa top bg-info">
+        <a href="<{:U('sendhistory')}>" class=" btn <if condition="$sendhistory"> btn-primary <else/> btn-default </if>  ">发出的信件</a><a href="<{:U('index')}>" class=" btn <if condition="$index"> btn-primary <else/> btn-default </if> ">收到的信件</a><a id="delchecked" class="button btn btn-default">删除选中</a>
+    </div>
+    <div class="aaa">
+        <table class="table col-md-1 table-striped table-bordered ">
+
+             <tr class="">
+                 <th class="col-md-1 " ></th>
+
+                 <th class="col-md-3" id="sj"><{$status?'收件人':'发件人'}></th>
+                 <th class="col-md-4">事件主题</th>
+                 <th class="col-md-2">时间</th>
+                <!-- 判断是否是收到信件显示操作-->
+                <if condition="$index">
+                    <th class="col-md-2">操作</th>
+                </if>
+
+             </tr>
+            <foreach name="arr_message" item="v">
+                <tr id="tr<{$v.id}>" >
+                    <td class="col-xs-1 " align="center"><input type="checkbox" name="checkboxes[]" value="<{$v.id}>" /></td>
+
+                    <td class="col-sm-3"><{$v.uname}><<{$v.address}>></td>
+                    <td class="col-md-4"><a href="<{:U("content?id={$v[id]}&status={$status}")}>"><{$v.title}></a></td>
+                    <td class="col-md-2" align="center"><{$v.time}></td>
+                    <if condition="$index">
+                        <td class="col-md-2" align="center">
+                            <if condition="$v.status eq 1">
+                                已读
+                                <else />
+                                <span style="color: #f00">未读</span>
+                            </if>
+                        </td>
+                    </if>
+                </tr>
+            </foreach>
+
+
+        </table>
+    </div>
+    <div class="product_list_bottom">
+        <div class="product_list_left">每页显示: &nbsp;<{$page_size}>条</div>
+        <div class="product_list_right"><{$show}></div>
+    </div>
+</block>
+<block name="foot">
+    <script src="__JS__/layer/layer.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            $('#delall').click(function(){
+                layer.confirm('确认删除？', {
+                        btn: ['确定','取消'] //按钮
+                    },function(){
+                    sj = $('#sj').text();//用来判定是收件还是发件
+
+                    $.ajax({
+                        type: "POST",
+                        url: "<{:U('delall')}>",
+                        data: "sj="+sj,
+                        success: function(msg){
+                            $('table').text('数据已清空');
+
+                        }
+                    });
+                    layer.msg('删除全部成功', {icon: 1});
+                }, function(){
+
+                })
+
+            })
+            $('#delchecked').click(function(){
+
+                if($("input[type='checkbox']").is(':checked')){
+                    layer.confirm('确认删除？', {
+                        btn: ['确定','取消'] //按钮
+                    }, function(){
+                        var arr=[];
+                        var str='';
+                        $('input[type=checkbox]:checked').each(function(){
+                            arr[arr.length]=$(this).val();
+                            str+=$(this).val()+',';
+                        });
+
+                        $.get('<{:U('delchecked')}>',{'str':str},function(data){
+
+                            if(data==arr.length){
+                                for (var i = arr.length - 1; i >= 0; i--) {
+                                    $('#tr'+arr[i]).remove();
+                                };
+                            }
+                        });
+                        layer.msg('删除成功', {icon: 1});
+                    }, function(){
+
+                    });
+                }else{
+                   alert('请选择要删除的内容');
+                }
+
+
+
+            })
+            $("input[type='checkbox']").click( function () {
+
+                if($("input[type='checkbox']").is(':checked')){
+                    $('.button').addClass('btn-danger');
+                    $('.button').attr('disabled',false);;
+                }else{
+                    $('.button').removeClass('btn-danger');
+                    $('.button').attr('disabled',true);
+                }
+
+            });
+
+        })
+
+    </script>
+</block>

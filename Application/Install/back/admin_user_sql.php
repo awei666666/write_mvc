@@ -1,0 +1,22 @@
+<?php	return array ( 'drop' => 'DROP TABLE IF EXISTS `{@prefix}admin_user`;', 'create' => 'CREATE TABLE `{@prefix}admin_user` (
+  `id` int(100) NOT NULL AUTO_INCREMENT,
+  `user` varchar(255) CHARACTER SET gbk NOT NULL DEFAULT \'\' COMMENT \'账号\',
+  `name` varchar(100) CHARACTER SET gbk NOT NULL DEFAULT \'\' COMMENT \'姓名\',
+  `password` varchar(100) CHARACTER SET gbk NOT NULL DEFAULT \'\' COMMENT \'密码\',
+  `group_id` int(2) NOT NULL DEFAULT \'0\' COMMENT \'用户组\',
+  `tel` varchar(100) CHARACTER SET gbk NOT NULL DEFAULT \'\' COMMENT \'固定电话\',
+  `mobile` varchar(100) CHARACTER SET gbk NOT NULL DEFAULT \'\' COMMENT \'手机\',
+  `login_nums` int(100) NOT NULL DEFAULT \'0\' COMMENT \'登陆次数\',
+  `last_login_time` int(100) NOT NULL DEFAULT \'0\' COMMENT \'最后一次登陆时间\',
+  `login_ip` varchar(100) CHARACTER SET gbk NOT NULL DEFAULT \'\' COMMENT \'登陆ip\',
+  `province` int(11) NOT NULL DEFAULT \'0\' COMMENT \'省id\',
+  `city` int(11) NOT NULL DEFAULT \'0\' COMMENT \'市id\',
+  `area` int(11) NOT NULL DEFAULT \'0\' COMMENT \'县id\',
+  `street` int(11) NOT NULL DEFAULT \'0\' COMMENT \'乡镇id\',
+  `country` int(11) NOT NULL DEFAULT \'0\' COMMENT \'村id\',
+  `address` text CHARACTER SET gbk NOT NULL COMMENT \'地址\',
+  `synopsis` longtext CHARACTER SET gbk NOT NULL COMMENT \'简介\',
+  `head_img` varchar(255) CHARACTER SET gbk NOT NULL DEFAULT \'\' COMMENT \'头像\',
+  `status` tinyint(1) NOT NULL DEFAULT \'1\' COMMENT \'账户状态，禁用为0  启用为1\',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=119 DEFAULT CHARSET=utf8 COMMENT=\'后台用户表\';', );?>

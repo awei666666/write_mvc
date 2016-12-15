@@ -1,0 +1,93 @@
+<extend name="./Application/Admin/View/Layout.html" />
+<block name="head">
+	<style>
+		.user_info{
+			margin-top: 20px;
+			margin-left:150px
+		}
+		.panel i{
+			margin-right: 10px;
+		}
+	</style>
+</block>
+<block name="nav">
+	<{$menu}>
+</block>
+<block name="content">
+	<div class="user_info" >
+		<div class="col-md-9">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<i class="glyphicon glyphicon-user"></i> 个人信息
+				</div>
+				<table class="table table-bordered">
+					<tr>
+						<td style="width:250px">
+							用户组：<label class="label label-warning f12"><{$user.group_id}></label>
+
+						</td>
+						<td>
+							您好，<a class="label label-primary f12" href="{:U('User/Index/myinfo')}"><{$user.user}></a>
+						</td>
+					</tr>
+					<tr>
+						<td>上一次登录IP</td>
+						<td><{$user.login_ip}></td>
+					</tr>
+					<tr>
+						<td>最后一次登录时间</td>
+						<td><{:date('Y-m-d H:i:s', $user['last_login_time'])}></td>
+					</tr>
+					<tr>
+						<td>登录次数</td>
+						<td>第&nbsp;<{$user['login_nums']}>&nbsp;次</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		<div class="col-md-9">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<i class="glyphicon glyphicon-blackboard"></i> 程序/服务器信息
+				</div>
+				<table class="table table-bordered">
+					<tr>
+						<td width="130">程序版本</td>
+						<td>awin V1.0.0</td>
+					</tr>
+					<tr>
+						<td>操作系统 / 编码</td>
+						<td title="{:php_uname()}"><{:php_uname('s')}> / <php>
+								$array = explode(' ', $_SERVER['SERVER_SOFTWARE']);
+								echo $array[0]
+							</php></td>
+					</tr>
+
+					<tr>
+						<td>文件上传</td>
+						<td><{:ini_get('upload_max_filesize')}></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		<!--<div class="col-md-9">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<i class="glyphicon glyphicon-tags"></i> 版权信息
+				</div>
+				<table class="table table-bordered">
+					<tr>
+						<td width="130">版权所有</td>
+						<td>山西天凯集团有限公司版权所有。</td>
+					</tr>
+					<tr>
+						<td>版权授权</td>
+						<td >山西粮易天下电子商务公司</td>
+					</tr>
+				</table>
+			</div>
+		</div>-->
+		<div class="clearfix"></div>
+	</div>
+</block>
+

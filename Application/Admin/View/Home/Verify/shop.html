@@ -1,0 +1,298 @@
+<extend name="./Application/Admin/View/Layout.html" />
+<block name="head">
+    <style>
+        *{
+            padding: 0px;
+            margin: 0px;
+            list-style: none;
+        }
+        .product_list_top{
+            border-bottom: #CBE9F3 1px solid;
+            padding: 15px 15px 0px;
+
+        }
+        .containerw{
+            margin-top: 25px;
+        }
+        .product-list_data{
+            margin-top: 25px;
+        }
+        #rightBox{
+            padding:0 10px;
+        }
+        .table th{
+            text-align: center;
+        }
+        /*底部分页css*/
+        .product_list_left{
+            width: 100px;
+            float: left;
+            line-height: 40px;
+        }
+        .product_list_right{
+            width: 800px;
+            float: right;
+            text-align: right;
+        }
+        .product_list_bottom{
+            margin-top: 15px;
+            margin-bottom: 100px;
+        }
+        .pagination{
+            margin:0px;
+            padding: 0px;
+        }
+
+    </style>
+</block>
+<block name="nav">
+    <div onclick="two(this.id)" class="two" id="index-manage">
+        <a class="menu-father-a" href="javascript:;">
+            <i class="glyphicon glyphicon-briefcase"></i>
+            <span>待审核信息</span>
+            <i class="glyphicon glyphicon-chevron-up domn domn-index-manage"></i>
+        </a>
+    </div>
+
+    <ul  class="three index-manage">
+        <li class="index-manage active">
+            <a href="<{:U('admin/home/verify/shop')}>">
+                <i class="glyphicon glyphicon-calendar"></i>
+                <span>待审核店铺</span>&nbsp;&nbsp;&nbsp;
+                <span class="badge"><{$menu['shop_num']}></span>
+
+            </a>
+        </li>
+    </ul>
+    <ul  class="three index-manage">
+        <li class="index-manage">
+            <a href="<{:U('admin/home/verify/member')}>">
+                <i class="glyphicon glyphicon-user"></i>
+                <span>待审核会员</span>&nbsp;&nbsp;&nbsp;
+                <span class="badge"><{$menu['member_num']}></span>
+
+            </a>
+        </li>
+    </ul>
+    <ul  class="three index-manage">
+        <li class="index-manage">
+            <a href="<{:U('admin/home/verify/product')}>">
+                <i class="glyphicon glyphicon-inbox"></i>
+                <span>待审核产品</span>&nbsp;&nbsp;&nbsp;
+                <span class="badge"><{$menu['product_num']}></span>
+            </a>
+        </li>
+    </ul>
+
+    <!--二级目录-->
+    <div onclick="two(this.id)" class="two" id="index-info">
+        <a class="menu-father-a" href="javascript:;">
+            <i class="glyphicon glyphicon-comment"></i>
+            <span>其他信息</span>
+            <i class="glyphicon glyphicon-chevron-up domn domn-index-manage"></i>
+        </a>
+    </div>
+
+    <ul  class="three index-info">
+        <li class="index-info ">
+            <a  href="<{:U('admin/home/message/index')}>">
+                <i class="glyphicon glyphicon-bell"></i>
+                <span>事件提醒</span>&nbsp;&nbsp;&nbsp;
+                <span class="badge"><{$menu['message_num']}></span>
+
+            </a>
+        </li>
+    </ul>
+    <ul  class="three index-info">
+        <li class="index-info">
+            <a href="javascript:;">
+                <i class="glyphicon glyphicon-bullhorn"></i>
+                <span>特殊通知</span>&nbsp;&nbsp;&nbsp;
+                <span class="badge">4</span>
+            </a>
+        </li>
+    </ul>
+</block>
+<block name="content">
+    <div class="product_list_top">
+        <div class="alert alert-warning" role="alert">
+            <p>通过店铺管理，您可以进行编辑店铺信息、店铺类型以及删除店铺等操作。</p>
+            <p>请先根据条件搜索用户，然后选择相应的操作。</p>
+        </div>
+    </div>
+    <div class="containerw">
+        <form action="__URL__/shop" method="get" class="form-inline">
+            <div class="form-group">
+                <select class="form-control" name="key">
+                    <option value="0">请选择</option>
+                    <option value="userid" <if condition="$filter['key'] eq userid">selected</if>>会员ID</option>
+                    <option value="shopname" <if condition="$filter['key'] eq shopname">selected</if>>店铺名称</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="sr-only" for="exampleInputAmount"></label>
+                <div class="input-group col-sm-12">
+                    <div class="input-group-addon "><i class="glyphicon glyphicon-search"></i></div>
+                    <input type="text" class="form-control" id="exampleInputName" name="key2" value="<{$filter.key2}>">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="exampleInputName2">店铺分类</label>
+                <select class="form-control" name="classify_id">
+                    <option value="0">店铺分类</option>
+                    <volist name="shop_cat_list" id="v">
+                        <option value="<{$v.id}>" <if
+                            condition="$v['id'] eq $filter['classify_id'] ">selected
+                        </if>><{$v.name}></option>
+                    </volist>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="exampleInputName2">所在地区</label>
+                <select name="province_id" class="form-control" id="region_0_0" onchange="setregion(0,0)">
+                    <option name="selected" selected='selected' value="-1">请选择(国家)</option>
+                    <volist name="district_list" id="v">
+                        <option value="<{$v.id}>" <if
+                            condition="$v['id'] eq $filter['province_id'] ">selected
+                        </if> ><{$v.name}></option>
+                    </volist>
+                </select>
+                <select name="city_id" class="form-control" id="region_1_0" onchange="setregion(1,0)">
+                    <option name="selected" selected='selected' value="0" >请选择(省份)</option>
+                </select>
+                <select name="county_id" id="region_2_0" class="form-control" onchange="setregion(2,0)">
+                    <option name="selected" selected='selected' value="0">请选择(县)</option>
+                </select>
+                <select name="street_id" id="region_3_0" class="form-control" onchange="setregion(3,0)">
+                    <option name="selected" selected='selected' value="0">请选择(镇)</option>
+                </select>
+                <select name="hamlet_id" id="region_4_0" class="form-control">
+                    <option name="selected" selected='selected' value="0">请选择(村)</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">搜索</button>
+        </form>
+
+        <div class="product-list_data">
+            <if condition="$shop_lists">
+                <form action="__URL__/setupshop" method="post" id="form" name="form">
+                    <div data-example-id="striped-table" class="bs-example">
+
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                            <tr>
+                                <th><input type="checkbox" name="checkedAll" id="checkedAll">编号</th>
+                                <th>排名指数</th>
+                                <th>商铺名称</th>
+                                <th>创店时间</th>
+                                <th>状态</th>
+                            </tr>
+                            </thead>
+                            <volist name="shop_lists" id="list">
+                                <tr >
+                                    <td width="150px;" align="center" scope="row"><input type="checkbox" name="checkboxes[]" value="<{$list.id}>"><{$list.id}></td>
+                                    <td width="100px;" align="center"><{$list.rank}></td>
+                                    <td width="250px;"><{$list.name}></td>
+                                    <td width="250px;" ><{$list.addtime|date='Y-m-d h:i:s',###}></td>
+                                    <td align="center" width="150px;" >
+                                        <if condition="$list.status eq 0"> 待审核
+                                            <elseif condition="$list.status eq 1"/>审核通过
+                                            <else /> 审核失败
+                                        </if>
+                                    </td>
+                                </tr>
+                            </volist>
+                            </tbody>
+                        </table>
+                        <div class="product_list_submit">
+                            <button type="submit" name="status" value="1" class="button btn btn-sm" disabled="true"  >通过</button>
+                            <button type="submit" name="status" value="-1" class="button btn btn-sm" disabled="true"  >不通过</button>
+                        </div>
+                    </div>
+                    <div class="product_list_bottom">
+                        <div class="product_list_left">每页显示: &nbsp;<{$page_size}>条</div>
+                        <div class="product_list_right"><{$show}></div>
+                    </div>
+
+                </form>
+                <else />
+                <!--无数据显示-->
+                <div class="alert alert-danger" role="alert" style="text-align: center">暂无数据</div>
+            </if>
+
+
+        </div>
+    </div>
+
+</block>
+<block name="foot">
+    <script type="text/javascript">
+        //城市联动 ajax
+        //设置默认,页面加载时恢复默认选项。
+
+        function setregion(num,address_id) {
+            var next=num+1;
+            $.ajax({
+                type:'POST',
+                //设置json格式,接收返回数组。
+                dataType:'json',
+                url:'__CONTROLLER__/Ajax_district',
+                //ajax传递当前选项的value值,也就是当前的region_id。
+                data:'id='+$('#region_'+num+'_'+address_id).val(),
+                success:function(msg) {
+                    //如果返回值不为空则执行。
+                    if (msg!=null) {
+                        var option_str='';
+                        //循环书写下一个select中要添加的内容。并添加name标记。
+                        for (var i=0; i<msg.length; i++) {
+                            option_str+='<option name="region_'+next+'"value="'+msg[i].id+'" >'+msg[i].name+'</option>';
+                        }
+                        //删除下一个select中标记name为next的内容。
+                        $("option[name='region_"+next+"']").remove();
+                        //向下一个select中添加书写好的内容。
+                        $('#region_'+next+'_'+address_id).append(option_str);
+                    }else{
+                        //如果返回值为空,则移除所有带标记的option,恢复默认选项。
+                        for (var i=next; i<=4; i++) {
+                            $("option[name='region_"+i+"']").remove();
+                        }
+                    }
+                }
+
+            })
+        }
+
+        //底部按钮可执行操作
+        $("input[type='checkbox']").click( function () {
+
+            if($("input[type='checkbox']").is(':checked')){
+                $('.button').addClass('btn-primary');
+                $('.button').attr('disabled',false);;
+            }else{
+                $('.button').removeClass('btn-primary');
+                $('.button').attr('disabled',true);
+            }
+
+        });
+
+
+        //全选全不选
+        $("#checkedAll").click(function () {
+
+            if ($(this).prop("checked")) { // 全选
+                $("input[type='checkbox']").prop("checked", true);
+            }
+            else { // 取消全选
+                $("input[type='checkbox']").prop("checked", false);
+                //$('.button').removeClass('btn-primary');
+                //$('.button').attr('disabled',true);
+
+            }
+        });
+        var $subBox = $("input[type='checkbox']");
+        $subBox.click(function(){
+            $("#checkedAll").attr("checked",$subBox.length == $("input[type='checkbox']:checked").length ? true : false);
+        });
+
+    </script>
+</block>

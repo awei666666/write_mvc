@@ -1,0 +1,187 @@
+<extend name="./Application/Admin/View/Layout.html" />
+<block name="head">
+  <!--日历插件-->
+  <script type="text/javascript" src="__JS__/js/laydate.js"></script>
+  <style>
+    *{
+      padding: 0px;
+      margin: 0px;
+      list-style: none;
+    }
+    p{
+      height:10px ;
+      text-align: left;
+      font-size: 13px;
+    }
+    .product_list_top {
+      border-bottom: #CBE9F3 1px solid;
+      padding: 15px;
+    }
+
+    .product_list_left{
+      width: 100px;
+      float: left;
+      line-height: 80px;
+    }
+    .product_list_right{
+      width: 800px;
+      float: right;
+      text-align: right;
+    }
+    .product_list_bottom{
+      margin-top: 15px;
+      margin-bottom: 100px;
+    }
+    table{
+      align-content: center;
+    }
+    table td{
+      padding-top: 10px;
+      padding-bottom: 10px;
+    }
+    #one{
+      width: 30%;
+    }
+  </style>
+</block>
+<block name="content">
+  <div >
+    <div class=" clearfix">
+      <div class="col-md-12 column">
+        <div class="product_list_top">
+
+            <button stype="submit" name="requirement" value="all" class='btn <if condition="$filter.requirement eq all">btn-primary<else/>btn-default</if>'>管理分站</button>
+             <a href="<{:U('addcity')}>"  name="requirement" value="1" class='btn <if condition="$filter.requirement eq 1">btn-primary<else/>btn-default</if>'>增加城市分站</a>
+
+          <div class="clear"></div>
+        </div>
+      </div>
+    </div>
+    <div class=" clearfix table">
+      <div class="col-md-12 column">
+        <div data-example-id="striped-table" class="bs-example">
+
+            <table class="table table-hover">
+              <thead>
+              <tr>
+                <th id="one">域名</th>
+                <th>内容</th>
+                <th>操作</th>
+              </tr>
+              </thead>
+              <tbody>
+              <if condition="arr_domain">
+              <volist name="arr_domain" id="v">
+
+                <tr id="tr<{$v.id}>">
+                  <td><span id="common">http://<{$v.domainname}>.www.liangyi.com</td>
+                  <td>
+                    <span id="common"><{$v.province}><{$v.city}><{$v.county}><br>
+                      <{$v.des}>
+                    </span>
+                  </td>
+                  <td>
+                    <span id="common">
+                      <a href="<{:U('editcity',array('id'=>$v['id']))}>" class=" glyphicon glyphicon-pencil">修改</a>
+                      <a onclick="del(<{$v.id}>)" class=" glyphicon glyphicon-remove">删除</a>
+                      <a onclick="isopen(<{$v.id}>)" class=" glyphicon glyphicon-play"><{$v['isopen']?'关闭':'开启'}></a>
+                  </span>
+                  </td>
+                </tr>
+              </volist>
+              </tbody>
+            </table>
+            </form>
+
+            <div class="product_list_bottom">
+              <div class="product_list_left">每页显示: &nbsp;<{$page_size}>条</div>
+              <div class="product_list_right"><{$show}></div>
+            </div>
+
+            <else />
+            <!--无数据显示-->
+            <div class="alert alert-danger" role="alert" style="text-align: center">暂无数据</div>
+          </if>
+        </div>
+      </div>
+    </div>
+  </div>
+</block>
+<block name="foot">
+  <script src="__JS__/layer/layer.js"></script>
+  <script type="text/javascript">
+    function setregion(num,address_id) {
+      var next=num+1;
+      $.ajax({
+        type:'POST',
+        //设置json格式,接收返回数组。
+        dataType:'json',
+        url:'__CONTROLLER__/Ajax_district',
+        //ajax传递当前选项的value值,也就是当前的region_id。
+        data:'id='+$('#region_'+num+'_'+address_id).val(),
+        success:function(msg) {
+          //如果返回值不为空则执行。
+          if (msg!=null) {
+            var option_str='';
+            //循环书写下一个select中要添加的内容。并添加name标记。
+            for (var i=0; i<msg.length; i++) {
+              option_str+='<option name="region_'+next+'"value="'+msg[i].id+'" >'+msg[i].name+'</option>';
+            }
+            //删除下一个select中标记name为next的内容。
+            $("option[name='region_"+next+"']").remove();
+            //向下一个select中添加书写好的内容。
+            $('#region_'+next+'_'+address_id).append(option_str);
+          }else{
+            //如果返回值为空,则移除所有带标记的option,恢复默认选项。
+            for (var i=next; i<=4; i++) {
+              $("option[name='region_"+i+"']").remove();
+            }
+          }
+        }
+
+      })
+    }
+    $("input[type='checkbox']").click( function () {
+
+      if($("input[type='checkbox']").is(':checked')){
+        $('.button').addClass('btn-primary');
+        $('.button').attr('disabled',false);;
+      }else{
+        $('.button').removeClass('btn-primary');
+        $('.button').attr('disabled',true);
+      }
+
+    });
+    function del(id){
+
+      layer.confirm('确认删除？', {
+        btn: ['确定','取消'] //按钮
+      }, function(){
+
+
+        $.get('<{:U("del")}>',{'id':id},function(data){
+          location=location
+        });
+        layer.msg('通过成功', {icon: 1});
+      }, function(){
+
+      });
+    }
+    function isopen(id){
+
+      layer.confirm('确认更改？', {
+        btn: ['确定','取消'] //按钮
+      }, function(){
+
+
+        $.get('<{:U("isopen")}>',{'id':id},function(data){
+          location=location
+        });
+        layer.msg('更改成功', {icon: 1});
+      }, function(){
+
+      });
+    }
+
+  </script>
+</block>

@@ -1,0 +1,262 @@
+<extend name="./Application/Admin/View/Layout.html" />
+<block name="head">
+  <!--图片上传-->
+  <link rel="stylesheet" href="__UPLOADIFY__/uploadify.css">
+  <script src='__UPLOADIFY__/jquery.min.js'></script>
+  <script src='__UPLOADIFY__/jquery.uploadify.min.js'></script>
+  <!--编辑框-->
+  <script type="text/javascript" charset="utf-8" src="__UWDITOR__/ueditor.config.js"></script>
+  <script type="text/javascript" charset="utf-8" src="__UWDITOR__/ueditor.all.min.js"> </script>
+  <!--建议手动加在语言，避免在ie下有时因为加载语言失败导致编辑器加载失败-->
+  <!--这里加载的语言文件会覆盖你在配置项目里添加的语言类型，比如你在配置项目里配置的是英文，这里加载的中文，那最后就是中文-->
+  <script type="text/javascript" charset="utf-8" src="__UWDITOR__/lang/zh-cn/zh-cn.js"></script>
+  <style>
+    *{
+      padding: 0px;
+      margin: 0 auto;
+      list-style: none;
+    }
+    .editcontrol{
+      margin: 15px;
+    }
+    .glyphicon｛
+    color:#f00;
+    ｝
+  </style>
+</block>
+<block name="content">
+
+  <div class="">
+    <volist name="data" id="vo">
+    <form class="form-horizontal" action="" enctype="multipart/form-data" method="post">
+      <div class="col-sm-11" style="margin: 15px 0px;">
+        <p class="bg-primary" style="padding: 8px 10px;font-size: 16px;">修改管理员信息</p>
+      </div>
+      <input type="hidden" name="id" value="<{$vo.id}>">
+      <div class="form-group">
+        <label for="inputEmail3" class="col-sm-2 control-label must">&nbsp;&nbsp;账号</label>
+        <div class="col-sm-5">
+          <input type="text" name="user" class="form-control must-input" placeholder="账号" value="<{$vo.name}>">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="inputEmail3" class="col-sm-2 control-label must">&nbsp;&nbsp;用户名</label>
+        <div class="col-sm-5">
+          <input type="text" name="name" class="form-control must-input" placeholder="用户名" value="<{$vo.name}>">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="inputPassword3" name="password" class="col-sm-2 control-label must">&nbsp;&nbsp;密码</label>
+        <div class="col-sm-5">
+          <input type="password" class="form-control must-input" placeholder="密码" value="<{$vo.password}>">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="inputPassword3" class="col-sm-2 control-label must">&nbsp;&nbsp;所属管理组</label>
+        <div class="col-sm-5">
+          <select class="form-control must-input" name="group_id">
+            <foreach id="111" name="gdata" item="vo">
+              <option value="<{$vo.id}>"><{$vo.title}></option>
+            </foreach>
+
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="inputEmail3" class="col-sm-2 control-label">电话</label>
+        <div class="col-sm-5">
+          <input type="text" name="tel" class="form-control" placeholder="电话" value="<{$vo.tel}>">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="inputEmail3" class="col-sm-2 control-label must">&nbsp;&nbsp;移动电话</label>
+        <div class="col-sm-5">
+          <input type="text" name="mobile" class="form-control must-input" placeholder="移动电话" value="<{$vo.mobile}>">
+        </div>
+      </div>
+
+      <div class="form-group">
+
+        <label for="inputPassword3" class="col-sm-2 control-label must">&nbsp;&nbsp;所属地区</label>
+        <!--<span><{$member.area}></span>-->
+        <div class="col-sm-5" style="line-height: 50px;">
+          <select name="province" class="" id="region_0_0" onchange="setregion(0,0)">
+            <option name="selected" selected='selected' value="0">请选择(省)</option>
+            <volist name="cdata" id="v">
+              <option value="<{$v.id}>"><{$v.name}></option>
+            </volist>
+          </select>
+          <select name="city" class="" id="region_1_0" onchange="setregion(1,0)">
+            <option name="selected" selected='selected' value="0" >请选择(市)</option>
+          </select>
+          <select name="area" id="region_2_0" class="" onchange="setregion(2,0)">
+            <option name="selected" selected='selected' value="0">请选择(县)</option>
+          </select>
+          <select name="street" id="region_3_0" class="" onchange="setregion(3,0)">
+            <option name="selected" selected='selected' value="0">请选择(镇)</option>
+          </select>
+          <select name="country" id="region_4_0" class="">
+            <option name="selected" selected='selected' value="0">请选择(村)</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="inputEmail3" class="col-sm-2 control-label must">详细地址</label>
+        <div class="col-sm-5">
+          <input type="text" name="address" class="form-control must-input" placeholder="详细地址" value="<{$vo.address}>">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="inputEmail3" class="col-sm-2 control-label">管理员描述</label>
+        <div class="col-sm-8">
+          <script id="editor" type="text/plain" name="synopsis" style="width:650px;height:400px;float:left;">
+             <{$vo.synopsis}>
+          </script>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="inputEmail3" class="col-sm-2 control-label must">管理员照片</label>
+        <div class="col-sm-5">
+          <img src="<{$vo.head_img}>" alt="" width="150px" height="200px">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="inputEmail3" class="col-sm-2 control-label">修改管理员照片</label>
+        <div class="col-sm-5" style="background: #F8F8F8; padding: 15px 20px ">
+          <input id="file_upload" name="head_img" type="file" multiple="true" value="" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="inputEmail3" class="col-sm-2 control-label must">&nbsp;&nbsp;是否启用</label>
+        <div class="col-sm-5">
+          <if condition="$vo.status eq 1">
+            <label class="radio-inline">
+              <input name="status" type="radio" value="1" checked/>启用
+            </label>
+            <label class="radio-inline">
+              <input name="status" type="radio" value="0"/>禁用
+            </label>
+            <else/>
+            <label class="radio-inline">
+              <input name="status" type="radio" value="1" />启用
+            </label>
+            <label class="radio-inline">
+              <input name="status" type="radio" value="0" checked/>禁用
+            </label>
+          </if>
+
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-1">
+          <button type="submit" class="btn btn-primary btn-lg btn-block">提交</button>
+        </div>
+        <div class="col-sm-1">
+          <button type="reset" class="btn btn-primary btn-lg btn-block">重置</button>
+        </div>
+
+      </div>
+    </volist>
+    </form>
+  </div>
+
+</block>
+<block name="foot">
+  <script type="text/javascript">
+    var ue = UE.getEditor('editor');
+    <?php $timestamp = time();?>
+    $(function() {
+      $('#file_upload').uploadify({
+        'formData'     : {
+          'timestamp' : '<?php echo $timestamp;?>',
+          'token'     : '<?php echo md5('unique_salt' . $timestamp);?>'
+        },
+        'swf'      : '__UPLOADIFY__/uploadify.swf',
+        'uploader' : '__UPLOADIFY__/uploadify.php'
+      });
+    });
+
+
+    //城市联动 ajax
+    //设置默认,页面加载时恢复默认选项。
+
+    function setregion(num,address_id) {
+      var next=num+1;
+      $.ajax({
+        type:'POST',
+        //设置json格式,接收返回数组。
+        dataType:'json',
+        url:'__CONTROLLER__/Ajax_district',
+        //ajax传递当前选项的value值,也就是当前的region_id。
+        data:'id='+$('#region_'+num+'_'+address_id).val(),
+        success:function(msg) {
+          //如果返回值不为空则执行。
+          if (msg!=null) {
+            var option_str='';
+            //循环书写下一个select中要添加的内容。并添加name标记。
+            for (var i=0; i<msg.length; i++) {
+              option_str+='<option name="region_'+next+'"value="'+msg[i].id+'" >'+msg[i].name+'</option>';
+            }
+            //删除下一个select中标记name为next的内容。
+            $("option[name='region_"+next+"']").remove();
+            //向下一个select中添加书写好的内容。
+            $('#region_'+next+'_'+address_id).append(option_str);
+          }else{
+            //如果返回值为空,则移除所有带标记的option,恢复默认选项。
+            for (var i=next; i<=4; i++) {
+              $("option[name='region_"+i+"']").remove();
+            }
+          }
+        }
+
+      })
+    }
+
+    $(function(){
+
+      $('#sheng').change(function(){
+
+        var code=$('#sheng option:selected').val();
+
+        $.post('__URL__/chacity',{'code':code},function(data){
+
+          $('#city').html(data);
+
+        })
+
+      })
+
+      $('#city').change(function(){
+
+        var code=$('#city option:selected').val();
+
+        $.post('__URL__/chaarea',{'code':code},function(data){
+
+          $('#area').html(data);
+
+        })
+
+      })
+
+      var code=$('#sheng option').eq(0).val();
+
+      $.post('__URL__/chacitydefault',{'code':code},function(data){
+
+        $('#city').html(data);
+
+      })
+
+      var areacode=110100;
+
+      $.post('__URL__/chaareadefault',{'code':areacode},function(data){
+
+        $('#area').html(data);
+
+      })
+
+    })
+
+
+  </script>
+</block>

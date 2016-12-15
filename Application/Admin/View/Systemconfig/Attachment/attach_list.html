@@ -1,0 +1,144 @@
+<extend name="./Application/Admin/View/Layout.html" xmlns="http://www.w3.org/1999/html"/>
+<block name="head">
+  <style>
+    .margin_content{padding:10px;}
+    .product_list_right {
+      width: 800px;
+      float: right;
+      text-align: right;
+    }
+  </style>
+</block>
+<block name="content">
+  <div class="margin_content">
+    <div class="containerw">
+      <lable><h3>附件列表</h3></lable>
+      <div class="product-list_data">
+        <form action="" method="post" id="form" name="form">
+          <div data-example-id="striped-table" class="bs-example">
+            <table class="table table-bordered table-hover">
+              <thead>
+              <tr class= "info">
+                <th style="text-align: center;"><input type="checkbox" name="checkedAll" id="checkedAll"></th>
+                <th>ID</th>
+                <th>文件</th>
+                <th>存储目录</th>
+                <th>附件名</th>
+                <th>分类大小</th>
+                <th>附件类型</th>
+                <th>上传时间</th>
+                <th align="left">操作</th>
+              </tr>
+              </thead>
+              <tbody>
+              <volist name="list" id="vo">
+                <tr>
+                  <td scope="row" align="center"><input id="check" type="checkbox" name="checkboxes[]" value="<{$vo.id}>"></td>
+                  <td><{$vo.id}></td>
+                  <td><eq name="vo.type" value="image"><img src="__ROOT__/<{$vo.path}><{$vo.name}>" width="50" height="50"></eq></td>
+                  <td><{$vo.path}></td>
+                  <td><{$vo.name}></td>
+                  <td><{$vo.size|formatBytes=###}></td>
+                  <td><{$vo.type}></td>
+                  <td><{$vo.uptime|date="y-m-d",###}></td>
+                  <td align="left">
+                      <span id="del"><a href="javascript:void()" class="btn btn-danger btn-xs glyphicon glyphicon-trash">&nbsp;删除</a></span>
+                  </td>
+                </tr>
+              </volist>
+
+              </tbody>
+            </table>
+
+            <div class="product_list_bottom">
+              <div class="product_list_left"style="width:20%;float:left;">
+                <button type="button" disabled="true" class="button btn btn-sm" onclick="del_button()">删除</button>
+              </div>
+              <div class="product_list_right"><{$page}></div>
+            </div>
+            </tr>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</block>
+<block name="foot">
+  <script src="__JS__/layer/layer.js"></script>
+  <script type="text/javascript">
+
+    //全选全不选
+    $("#checkedAll").click(function () {
+
+      if ($(this).prop("checked")) { // 全选
+        $(".product-list_data input[type='checkbox']").prop("checked", true);
+      }
+      else { // 取消全选
+        $(".product-list_data input[type='checkbox']").prop("checked", false);
+      }
+      $(".btn-sm").addClass("btn-primary").prop("disabled",false)
+    });
+
+
+
+    //底部操作-删除
+    function del_button() {
+
+      layer.confirm('确认删除？', {
+        btn : ['确定', '取消'] //按钮
+      }, function () {
+        var arr = [];
+        var str = '';
+        $('input[type=checkbox]:checked').each(function () {
+
+          if($(this).val()!='on') {
+
+            arr[arr.length] = $(this).val();
+            str += $(this).val() + ',';
+          }
+        });
+
+
+        $.post('<{:U("attach_list")}>', {'option':'delall','str' : str}, function (data) {
+
+          if(data.status==1){
+            layer.msg(data.info, {icon : 1});
+          }else {
+            layer.msg(data.info, {icon : 2});
+          }
+          location=location;
+        });
+
+      }, function () {
+
+      });
+
+    }
+
+    $(document).on('click', '#del', function () {
+      var e = $(this);
+      layer.confirm('确认删除？', {
+        btn : ['确定', '取消'] //按钮
+      }, function () {
+        var tr  = e.parent().parent();
+        var id  = tr.children(':eq(0)');
+        var idz = id.children("input[type='checkbox']").val();
+        $.post('<{:U("attach_list")}>', {'option':'delone','str':idz}, function (data) {
+          console.log(data);
+
+          if(data.status==1){
+            layer.msg(data.info, {icon : 1});
+            e.parent().parent().remove();
+          }else {
+            layer.msg(data.info, {icon : 2});
+          }
+
+        });
+
+      },function(){});
+    });
+
+
+
+  </script>
+</block>

@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<include file="./Application/Install/View/head.html" />
+</head>
+<style>
+	body{
+		margin: 0;
+		padding: 0;
+	}
+	#head h1{
+		margin: 44px 0 0 -21px;
+		padding: 0;
+		display: inline;
+		color: #fff;
+		float: left;
+	}
+	#head{
+		background: #428bca url("__IMG__/install_img/index_back.png") repeat scroll center center;
+		height: 140px;
+		margin-bottom: 30px;
+	}
+	#head img{
+		float: left;
+		display: inline	;
+		margin: 31px 24px 0 126px;
+	}
+</style>
+<body>
+<header id="header" >
+	<div id="head" ><img src="__IMG__/install_img/LOGO.png" alt=""><h1>PROJECT_NAME</h1></div>
+</header>
+<content id="content" >
+	<div class="title text-center">正在安装</div>
+	<div class="install">
+		<div class="progress m-b-0">
+			<div class="progress-bar progress-bar-success progress-bar-striped" style="width: 0">
+				<span>0%</span>
+			</div>
+		</div>
+		<div class="info">正在安装中，请稍后...</div>
+		<textarea class="form-control" rows="10" autocomplete="off">开始安装</textarea>
+	</div>
+	<div class="buttons text-center">
+		<a class="btn btn-danger" href="javascript:history.go(-1)">上一步</a>
+	</div>
+</content>
+</body>
+</html>
+
+<extend name="Tpl/Layout.html"/>
+<block name="content">
+	<div class="title text-center">正在安装</div>
+	<div class="install">
+		<div class="progress m-b-0">
+			<div class="progress-bar progress-bar-success progress-bar-striped" style="width: 0">
+				<span>0%</span>
+			</div>
+		</div>
+		<div class="info">正在安装中，请稍后...</div>
+		<textarea class="form-control" rows="10" autocomplete="off">开始安装</textarea>
+	</div>
+	<div class="buttons text-center">
+		<a class="btn btn-danger" href="javascript:history.go(-1)">上一步</a>
+	</div>
+</block>
+<block name="foot">
+	<script>
+		$(function () {
+			var $progress = $('.progress-bar');
+			var $status   = $progress.find('span');
+			var $text     = $('textarea.form-control');
+			var $message  = $('.info');
+			var request   = function (link) {
+				$.get(link, function (data) {
+					console.log(data);return;
+					if (data.status) {
+						var code = data.data;
+						if (code.state === 'PROGRESS') {
+							// 每次执行完成的状态
+							if (data.info) {
+								$message.html(data.info);
+							}
+							// 每次执行完的记录
+							if (code.log) {
+								$text.val($text.val() + "\\r\\n" + code.log);
+								$text[0].scrollTop = $text[0].scrollHeight;
+							}
+							// 进度计算
+							progress = parseInt((code.progress / code.total).toFixed(2) * 100);
+							$progress.css('width', progress + '%');
+							$status.text(progress + '%');
+							request(data.url);
+						}
+
+						// 备份完成
+						else if (code.state === 'SUCCESS') {
+							alert('安装成功！');
+							self.location.href = data.url;
+						} else {
+							alert('未知错误！');
+						}
+					} else {
+						alert(data.info);
+						self.location.href = data.url;
+					}
+				});
+			};
+			request('<?=U('install?restore=1')?>');
+		});
+	</script>
+</block>

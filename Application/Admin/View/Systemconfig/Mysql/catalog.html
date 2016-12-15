@@ -1,0 +1,161 @@
+<extend name="./Application/Admin/View/Layout.html"/>
+<block name="head">
+	<style>
+		.content-padding {
+			padding-top: 15px;
+		}
+		.hover {
+			background-color: #cceeff;
+			color: #333;
+		}
+		table {
+			border-collapse: separate;
+			border-spacing: 0;
+		}
+		table th, table td {
+			border-right: #888 1px dashed;
+			text-align: center;
+		}
+		.header_mune {
+			/*background-color: #eeeeee;*/
+			background: rgba(0, 0, 0, 0) -moz-linear-gradient(center top, #f9f9f9, #e0e0e0) repeat scroll 0 0;
+		}
+		.on {
+			background-color: #00A2D4;
+		}
+		.red {
+			color: #d43f3a;
+		}
+		#btn-family-left {
+			margin: 10px 0 -10px 20px;
+			float: left;
+		}
+		#btn-family-right {
+			margin: 10px 30px -10px 20px;
+			float: right;
+		}
+		.clear {
+			clear: both;
+		}
+		.button-footer { margin: 20px; }
+		.input-left { float: left; width: 150px; margin-left: 10px; }
+		.input-left2 { float: left; width: 50px; margin-left: 10px; }
+		.checkbox { float: left; margin-left: 15px; }
+
+	</style>
+</block>
+<block name="content">
+	<div class="content-padding">
+
+		<div id="btn-family-left">
+
+			<div style="float: left">
+				<input type="hidden" name="g" value="system">
+				<input type="hidden" name="m" value="db">
+				<input type="hidden" name="a" value="index">
+				<form style="display: inline;" method="post" action="<{:U('catalog')}>">
+					<select class="form-control input-left" name="field">
+						<option value="table">表名称</option>
+					</select>
+
+					<input class="form-control input-left search_name" name="search_name" value="<{$search_name}>" placeholder="请输入关键字">
+					<button class="btn btn-info  input-left2" type="submit">搜索</button>
+
+					&nbsp;
+					<a class="btn btn-default " href="">显示全部</a>
+				</form>
+			</div>
+
+		</div>
+
+
+		<div class="clear"></div>
+		<div style="margin: 20px" class="panel panel-primary">
+			<div class="panel-heading"><{$menu_name.name}></div>
+			<table class="table">
+				<thead>
+				<tr class="header_mune">
+					<th width="80"><input id="all" type="checkbox"></th>
+					<th width="500">备份说明</th>
+					<th>目录名称</th>
+					<th>备份时间</th>
+					<th>状态</th>
+					<th>操作</th>
+				</tr>
+				</thead>
+				<tbody>
+				<form method="post" action="<{:U('delete_dir')}>">
+					<foreach name="list" item="v">
+						<tr>
+							<td><input class="other_input" name="dir_name[]" type="checkbox" value="<{$v.name}>"></td>
+							<td class="left_name_data"><{$v.content}></td>
+							<td class="left_name_data"><{$v.name}></td>
+							<td class="left_name_data"><{:date('Y-m-d H:i:s',$v['time'])}></td>
+
+							<if condition="$v['status'] eq true ">
+								<td class="left_name_data"><span class="label label-success f12">正常</span></td>
+								<elseif condition="$v['status'] eq false"/>
+								<td class="left_name_data"><span class="label label-danger f12">失效</span></td>
+								<else/>
+								<td>异常</td>
+							</if>
+							<td class="left_name_data">
+								&nbsp;
+								<a href="<{:U('delete_dir',array('dir_name'=>$v['name']))}>" title="删除备份" type="button" class="btn btn-danger btn-xs">
+									<span class="glyphicon glyphicon-trash" aria-hidden="true">  删除备份</span>
+								</a>
+							</td>
+						</tr>
+					</foreach>
+
+
+				</tbody>
+
+			</table>
+
+		</div>
+		<div class="button-footer">
+			<button class="btn btn-danger btn-sm" type="submit">删除目录</button>
+		</div>
+		</form>
+	</div>
+</block>
+<block name="foot">
+	<script>
+		$(function () {
+			//表格鼠标划过效果
+			$('table tr').hover(
+				function () {
+					$(this).addClass("hover");
+				},
+				function () {
+					$(this).removeClass("hover");
+				}
+			);
+			//点击显示全部
+			$('.creal_search').on('click', function () {
+				$('.search_name').val('');
+				//href
+			});
+
+			//全选
+			$('#all').on('click', function () {
+				var ischeck = $(this).is(':checked');
+				if (ischeck) {
+					$('.other_input').prop('checked', true);
+				} else {
+					$('.other_input').prop('checked', false);
+				}
+			});
+			//todo ly :按钮未选中不能点击
+		/*	/!**
+			 * 验证是否可以点击删除目录
+			 *!/
+			$('.other_input').on('change',function(){
+				$('.other_input').is(':');
+			});*/
+
+
+		});
+	</script>
+</block>

@@ -1,0 +1,183 @@
+/*表，时钟css*/
+.clock{
+	/*display: inline;*/
+	width:250px;
+	margin:0px 10px;
+	color:#fff;
+	margin-top: 25px;
+	float: right;
+	position: absolute;left: 80%;top:40px;
+}
+.clock #Date{
+	font-family:'BebasNeueRegular', Arial, Helvetica, sans-serif;
+	font-size:24px;
+	text-align:center;text-shadow:0 0 5px #00c6ff;
+ }
+.clock ul{
+	width:250px;
+	margin:0 auto;padding:0px;
+	list-style:none;text-align:center;
+}
+.clock ul li{
+	display:inline;font-size:24px;
+	text-align:center;font-family:'BebasNeueRegular', Arial, Helvetica, sans-serif;
+	text-shadow:0 0 5px #00c6ff;}
+#point{
+	position:relative;-moz-animation:mymove 1s ease infinite;
+	-webkit-animation:mymove 1s ease infinite;
+}
+@-webkit-keyframes mymove{
+	0%{opacity:1.0;text-shadow:0 0 20px #00c6ff;}
+	50%{opacity:0;text-shadow:none;}
+	100%{opacity:1.0;text-shadow:0 0 20px #00c6ff;}
+}
+
+
+@-moz-keyframes mymove{
+	0%{opacity:1.0;text-shadow:0 0 20px #00c6ff;}
+	50%{opacity:0;text-shadow:none;}
+	100%{opacity:1.0;text-shadow:0 0 20px #00c6ff;}
+}
+/*自己的css*/
+body {
+	width: 100%;
+	height: 100%;
+	min-width: 1000px;
+	overflow-y:hidden;
+}
+/*头部样式*/
+#header{
+	height: 140px;
+	background-color:#4cae4c;
+	background-color: rgba(51,122,183,0.8);
+	/*border-bottom: 14px #888 solid;*/
+}
+
+#logo{
+	display: inline-block;
+	line-height: 102px;
+}
+/*头部右边导航样式*/
+.logo-right{
+	height:30px;
+}
+.logo-right a,.logo-right span,.logo-right i{
+	color: #fff;
+}
+/*按钮样式*/
+.item{
+	float: left;
+	position: relative;
+}
+.item i{
+	display: inline-block;
+	margin: 5px;
+}
+.item .active{
+	background-color: #286090;
+}
+/*一级菜单样式*/
+#menu-1{
+	display: inline-block;
+	margin-left: 50px;
+}
+/*二级和三级菜单样式*/
+#leftBox{
+	width: 15%;
+	display: inline-block;
+	float: left;
+	overflow-y:auto;
+}
+/*主要内容大区域*/
+#contentBox{
+	width: 85%;
+	float: right;
+	background-color: #f5f5f5;
+}
+/*主要内容小区域*/
+#rightBox{
+	background-color: #fff;
+	margin-left: 15px;
+	height: 100%;
+	overflow-y:auto;
+}
+/*面包屑导航*/
+#currentBar i{
+	 color: #777; }
+#currentBar_span{
+	color: #777;
+}
+#currentBar{
+	height: 35px;
+}
+/*二级菜单*/
+.two{
+	border-bottom: 1px solid #ddd;
+	color: #333;
+	display: block;
+	font-size: 12px;
+	outline: 0 none;
+	padding: 8px 15px;
+	transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1) 0s;
+}
+.domn{
+	display: block;
+	margin-top: 2px;
+	float: right;
+}
+.two i {
+	color: #333;
+	display: inline-block;
+	margin-right: 10px;
+}
+.two {
+	background: #F0F0F0;
+}
+.two:hover {
+	background-color: #e0e0e0;
+}
+.two a {
+	text-decoration: none;
+}
+/*三级菜单*/
+.menu-panel ul, .menu-panel li {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+.three li {
+	border-bottom: 1px solid #ddd;
+	color: #333;
+	display: block;
+	font-size: 12px;
+	outline: 0 none;
+	padding: 8px 15px;
+	transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1) 0s;
+}
+.three a {
+	text-decoration: none;
+	display: block;
+}
+.three:hover {
+	background-color: #e0e0e0;
+}
+.three li i {
+	color: #333;
+	display: inline-block;
+	margin-right: 10px;
+	margin-left: 25px;
+}
+/*三级菜单默认选中样式*/
+.three .active{
+	background-color: #1262b7;
+}
+.three .active i,.active span{
+	color: #fff;
+}
+/*必选小红点*/
+.must:before{
+	content:'* ';
+	color: red;
+	font-size: 16px;
+	line-height: 36px;
+}

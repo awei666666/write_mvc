@@ -1,0 +1,13 @@
+status：
+  0：未安装
+  1：已经安装成功
+type：
+    0：正常安装
+     1：简洁安装
+	<div class="radio">
+		<label>
+			<input type="radio" name="type" id="optionsRadios2" value="1">急速安装
+
+		</label>
+		<label><input type="radio" name="type" id="optionsRadios2" value="0">正常安装</label>
+	</div>

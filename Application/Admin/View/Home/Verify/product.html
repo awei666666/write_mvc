@@ -1,0 +1,406 @@
+<extend name="./Application/Admin/View/Layout.html"/>
+<block name="head">
+	<style>
+		* {
+			padding: 0px;
+			margin: 0px;
+			list-style: none;
+		}
+		td{
+			text-align: center;
+		}
+		p{
+			height:10px ;
+			text-align: left;
+			font-size: 13px;
+		}
+		.product_list_top {
+			border-bottom: #CBE9F3 1px solid;
+			padding: 15px;
+		}
+		.containerw {
+			margin-top: 25px;
+		}
+		.product-list_data {
+			margin-top: 25px;
+		}
+		.table th {
+			background: #BBDDE5;
+			text-align: center;
+		}
+		.table-bordered > tbody > tr > td, .table-bordered > tbody > tr > th, .table-bordered > tfoot > tr > td, .table-bordered > tfoot > tr > th, .table-bordered > thead > tr > td, .table-bordered > thead > tr > th {
+			border: 1px solid #ccc;
+		}
+		#rightBox {
+			padding: 0 10px;
+		}
+		.product_list_right {
+			width: 100%;
+			float: right;
+			text-align: center;
+			/*background-color: red;*/
+		}
+		.product_list_bottom {
+			margin-top: 15px;
+		}
+		.pro_name{
+			width:270px;
+			text-align: left;
+			font-size: 13px;
+		}
+		.update_time{
+			width:100px;
+			margin: 0 auto;
+			margin-top: 20px;
+			/*background-color: red;*/
+		}
+		#wait{
+			color:red;
+			line-height: 65px;
+		}
+		#sale{
+			color:green;
+			line-height: 65px;
+		}
+		#recommend{
+			color: #00A0E9;
+			line-height: 65px;
+		}
+		#common{
+			line-height: 65px;
+		}
+		#check{
+			margin:0px 5px;
+		}
+		#soldout{
+			color: dimgray;
+			line-height: 65px;
+		}
+		#checkedAll{
+			margin:0px 5px;
+		}
+
+	</style>
+</block>
+<block name="nav">
+	<div onclick="two(this.id)" class="two" id="index-manage">
+		<a class="menu-father-a" href="javascript:;">
+			<i class="glyphicon glyphicon-briefcase"></i>
+			<span>待审核信息</span>
+			<i class="glyphicon glyphicon-chevron-up domn domn-index-manage"></i>
+		</a>
+	</div>
+
+	<ul  class="three index-manage">
+		<li class="index-manage">
+			<a href="<{:U('admin/home/verify/shop')}>">
+				<i class="glyphicon glyphicon-calendar"></i>
+				<span>待审核店铺</span>&nbsp;&nbsp;&nbsp;
+				<span class="badge"><{$menu['shop_num']}></span>
+
+			</a>
+		</li>
+	</ul>
+	<ul  class="three index-manage">
+		<li class="index-manage">
+			<a href="<{:U('admin/home/verify/member')}>">
+				<i class="glyphicon glyphicon-user"></i>
+				<span>待审核会员</span>&nbsp;&nbsp;&nbsp;
+				<span class="badge"><{$menu['member_num']}></span>
+
+			</a>
+		</li>
+	</ul>
+	<ul  class="three index-manage">
+		<li class="index-manage active">
+			<a href="<{:U('admin/home/verify/product')}>">
+				<i class="glyphicon glyphicon-inbox"></i>
+				<span>待审核产品</span>&nbsp;&nbsp;&nbsp;
+				<span class="badge"><{$menu['product_num']}></span>
+			</a>
+		</li>
+	</ul>
+
+	<!--二级目录-->
+	<div onclick="two(this.id)" class="two" id="index-info">
+		<a class="menu-father-a" href="javascript:;">
+			<i class="glyphicon glyphicon-comment"></i>
+			<span>其他信息</span>
+			<i class="glyphicon glyphicon-chevron-up domn domn-index-manage"></i>
+		</a>
+	</div>
+
+	<ul  class="three index-info">
+		<li class="index-info ">
+			<a  href="<{:U('admin/home/message/index')}>">
+				<i class="glyphicon glyphicon-bell"></i>
+				<span>事件提醒</span>&nbsp;&nbsp;&nbsp;
+				<span class="badge"><{$menu['message_num']}></span>
+
+			</a>
+		</li>
+	</ul>
+	<ul  class="three index-info">
+		<li class="index-info">
+			<a href="javascript:;">
+				<i class="glyphicon glyphicon-bullhorn"></i>
+				<span>特殊通知</span>&nbsp;&nbsp;&nbsp;
+				<span class="badge">4</span>
+			</a>
+		</li>
+	</ul>
+</block>
+<block name="content">
+
+	<div class="product_list_top">
+		<form action="__CONTROLLER__/product" method="post">
+				<button type="submit" <if condition="($p_status eq 1)"> class="btn btn-primary" <else/>class="btn btn-default"</if> name="status" value="1">待审核</button>
+		</form>
+		<div class="clear"></div>
+	</div>
+	<div class="containerw">
+		<form action="" method="post" class="form-inline">
+			<div class="form-group">
+				<label class="sr-only" for="exampleInputAmount">Amount (in dollars)</label>
+
+				<div class="input-group col-sm-12">
+					<div class="input-group-addon "><i class="glyphicon glyphicon-search"></i></div>
+					<input type="text" class="form-control" id="exampleInputName" name="name" placeholder="请输入产品名字">
+				</div>
+			</div>
+			<!--<div class="form-group">-->
+			<!--	<label class="sr-only" for="exampleInputPassword3">Password</label>-->
+			<!--	<input type="text" class="form-control" id="exampleInputShopName" name="shopname" placeholder="请输入店铺名称">-->
+			<!--</div>-->
+
+			<button type="submit" class="btn btn-primary">搜索</button>
+		</form>
+
+		<div class="product-list_data">
+			<form action="" method="post" id="form" name="form">
+				<div data-example-id="striped-table" class="bs-example">
+					<table class="table table-bordered table-hover">
+						<thead>
+						<tr>
+							<th><input type="checkbox" name="checkedAll" id="checkedAll">编号</th>
+							<th>产品图片</th>
+							<th>产品名称</th>
+							<th>销售价</th>
+							<th>库存</th>
+							<th>竞价排名</th>
+							<th>状态</th>
+							<th>浏览</th>
+							<th>更新时间</th>
+							<th>操作</th>
+						</tr>
+						</thead>
+						<tbody>
+						<volist name="list" id="v">
+
+							<tr id="tr<{$v.id}>">
+								<td scope="row" id="common"><input id="check" type="checkbox" name="checkboxes[]" value="<{$v.id}>"><{$v.id}></td>
+								<td><a href=""><img src="<{$v.pic}>" width="70px" height="70px"></a></td>
+								<td>
+									<div class="pro_name"><a href=""><b><{$v.name}></b></a></div>
+									<p><sapn>所属店铺:<{$v.member_id}></sapn></p>
+									<p><span>所属分类:<{$v.classify_id}></span></p>
+									<p><span>所属品牌:<{$v.brand}></span></p>
+								</td>
+								<td><span id="common"><{$v.now_price}></span></td>
+								<td><span id="common"><{$v.stock}></span></td>
+								<td><span id="common"><{$v.rank}></span></td>
+								<switch name="v.status">
+									<case value="0"><td id="wait">待审核</td></case>
+									<case value="1"><td id="sale">可售</td></case>
+									<case value="2"><td id="recommend">推荐</td></case>
+									<case value="3"><td id="soldout">违规下架</td></case>
+								</switch>
+								<td><span id="common"><{$v.click}></span></td>
+								<td>
+									<div class="update_time"><{$v.update_time|date='Y-m-d H:i:s',###}></div>
+								</td>
+								<td align="center">
+									<span id="common"><span class="glyphicon glyphicon-pencil" id="layer"></span></span>
+								</td>
+							</tr>
+						</volist>
+						</tbody>
+					</table>
+			</form>
+					<div>
+						<button type="button" disabled="true" class="button btn btn-sm" onclick="sale()">可售</button>
+						<button type="button" disabled="true" class="button btn btn-sm" onclick="checks()">待审核</button>
+						<button type="button" disabled="true" class="button btn btn-sm" onclick="sold_out()">违规下架</button>
+						<button type="button" disabled="true" class="button btn btn-sm" onclick="recommends()">推荐</button>
+						<button type="button" disabled="true" class="button btn btn-sm" onclick="dels()">删除</button>
+					</div>
+				</div>
+
+			<div class="product_list_bottom">
+				<div class="product_list_right"><{$show}></div>
+			</div>
+		</div>
+	</div>
+
+</block>
+<block name="foot">
+	<script src="__JS__/layer/layer.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function () {
+			//顶部按钮
+			$(function () {
+				//底部按钮可执行操作
+				$("input[type='checkbox']").click(function () {
+
+					if ($("input[type='checkbox']").is(':checked')) {
+						$('.button').addClass('btn-primary');
+						$('.button').attr('disabled', false);
+						;
+					} else {
+						$('.button').removeClass('btn-primary');
+						$('.button').attr('disabled', true);
+					}
+
+				});
+
+			})
+			//全选全不选
+			$("#checkedAll").click(function () {
+
+				if ($(this).prop("checked")) { // 全选
+					$("input[type='checkbox']").prop("checked", true);
+				}
+				else { // 取消全选
+					$("input[type='checkbox']").prop("checked", false);
+				}
+			});
+			var $subBox = $("input[type='checkbox']");
+			$subBox.click(function () {
+				$("#checkedAll").attr("checked", $subBox.length == $("input[type='checkbox']:checked").length ? true : false);
+			});
+
+			$('#btn>button').click(function(){
+				$(this).addClass('primary');
+			});
+
+		});
+			//底部操作-删除
+			function dels(){
+
+				layer.confirm('确认删除？', {
+					btn: ['确定','取消'] //按钮
+				}, function(){
+					var arr=[];
+					var str='';
+					$('input[type=checkbox]:checked').each(function(){
+						arr[arr.length]=$(this).val();
+						str+=$(this).val()+',';
+					});
+
+					$.get('__CONTROLLER__/Ajax_delAll',{'str':str},function(data){
+
+						if(data==arr.length){
+							for (var i = arr.length - 1; i >= 0; i--) {
+								$('#tr'+arr[i]).remove();
+							};
+						}
+					});
+					layer.msg('删除成功', {icon: 1});
+				}, function(){
+
+				});
+
+			}
+
+	//    底部操作-可售
+		function sale(){
+			var arr=[];
+			var str='';
+			$('input[type=checkbox]:checked').each(function(){
+				arr[arr.length]=$(this).val();
+				str+=$(this).val()+',';
+			});
+
+			$.get('__CONTROLLER__/Ajax_UpdateAll',{'str':str},function(data){
+
+				if(data){
+					alert('操作成功');
+					self.location.reload();
+
+				}else{
+					alert('操作失败');
+				}
+			});
+
+		}
+		// 底部操作-违规下架
+		function sold_out(){
+
+			var arr=[];
+			var str='';
+			$('input[type=checkbox]:checked').each(function(){
+				arr[arr.length]=$(this).val();
+				str+=$(this).val()+',';
+			});
+
+			$.get('__CONTROLLER__/Ajax_soldout',{'str':str},function(data){
+
+				if(data){
+					alert('操作成功');
+					self.location.reload();
+
+				}else{
+					alert('操作失败');
+				}
+			});
+
+		}
+
+		// 底部操作-推荐
+		function recommends(){
+
+			var arr=[];
+			var str='';
+			$('input[type=checkbox]:checked').each(function(){
+				arr[arr.length]=$(this).val();
+				str+=$(this).val()+',';
+			});
+
+			$.get('__CONTROLLER__/Ajax_recommends',{'str':str},function(data){
+
+				if(data){
+					alert('操作成功');
+					self.location.reload();
+
+				}else{
+					alert('操作失败');
+				}
+			});
+
+		}
+
+		// 底部操作-待审核
+		function checks(){
+
+			var arr=[];
+			var str='';
+			$('input[type=checkbox]:checked').each(function(){
+				arr[arr.length]=$(this).val();
+				str+=$(this).val()+',';
+			});
+
+			$.get('__CONTROLLER__/Ajax_checks',{'str':str},function(data){
+
+				if(data){
+					alert('操作成功');
+					self.location.reload();
+
+				}else{
+					alert('操作失败');
+				}
+			});
+
+		}
+
+	</script>
+</block>
